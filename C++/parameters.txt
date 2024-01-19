@@ -1,0 +1,3 @@
+mesh="square.msh"
+quadrature=gauss 
+lagrange=P1
