@@ -15,6 +15,9 @@ class Node{
          * @param id Identifiant unique du nœud.
          */
         Node(double x_, double y_, double z_, int id_);
+        Node(double x_, double y_, double z_);
+        Node(double x_, double y_);
+        Node(double x_);
 
 
         double getX() const;

@@ -27,7 +27,7 @@ namespace FEMProblem {
 
     double FOMEGA(std::vector<double> x);
 
-    double FN(std::vector<double> x, int aret);
+    double FN(std::vector<double> x, int numAret);
 
     double UD(std::vector<double> x);
 

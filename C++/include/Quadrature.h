@@ -1,9 +1,10 @@
 #ifndef QUADRATURE_H
 #define QUADRATURE_H
 
-#include <string>
-#include <vector>
 #include "Node.h"
+#include <string>
+
+// #include "FEMParameters.h"
 
 class Quadrature{
 private:
@@ -11,12 +12,21 @@ private:
     std::string elementType;
     int order;
 
+    // FEMParameters parameters;
+
     std::vector<double> weights;
-    std::vector<std::vector<double> > points;
+    std::vector<Node> points;
 public:
     Quadrature(std::string methodName_, std::string elementType_, int order_);
+    // Quadrature(FEMParameters parameters);
+    Quadrature(){};
+
+
 
     void weightsPoints(std::string elementType);
+
+    std::vector<double> getWeights();
+    std::vector<Node> getPoints();
 
 };
 

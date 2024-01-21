@@ -8,6 +8,9 @@ Element::Element(int id_, std::vector<int>& nodeIds, std::vector<Node>& nodes_)
         edges.push_back(Edge(nodes[i], nodes[i + 1]));
     }
     edges.push_back(Edge(nodes.back(), nodes.front()));  // Closing the loop
+
+    elemMatrix = std::vector<std::vector<double> >(nodes.size(), std::vector<double>(nodes.size(), 0.0));
+    fElem = std::vector<double>(nodes.size(), 0.0);
 }
 
 void Element::baseFunctions(const Node& pts){
@@ -106,6 +109,109 @@ std::vector<std::vector<double> > Element::invert2x2(std::vector<std::vector<dou
 
 }
 
+
+void Element::WW(double diffElement, double cofvar){
+
+	double coeff;
+    // double cofvar = FEMProblem::A00(point);
+
+	for (int i = 0; i < nodes.size() ; i++) {
+    	coeff = diffElement*cofvar*valBase[i];
+    	for (int j = 0 ; j < nodes.size() ; j++) {
+      		elemMatrix[i][j] = elemMatrix[i][j] + coeff*valBase[j];
+    	}
+  	}
+}
+
+void Element::W(double diffElement, double cofvar){
+    for (int i = 0 ; i < nodes.size() ; i++) {
+        fElem[i] += diffElement * cofvar * valBase[i];
+  	}
+}
+
+void Element::ADWDW(double diffElement, std::vector<double> point, std::vector<std::vector<double> > cofvar, std::vector<std::vector<double> > matInv){
+
+    int i, j, alpha, beta;
+
+	for (i = 0 ; i < nodes.size() ; i++) {
+    	for (j = 0 ; j < nodes.size() ; j++) {
+    		for(alpha = 0 ; alpha < 2 ; alpha++){
+                float pdscai = prodScal(valDerBase, matInv, alpha, j);
+                
+    			for(beta = 0 ; beta < 2 ; beta++){
+                    float pdscaj = prodScal(valDerBase, matInv, beta, i);
+      				elemMatrix[i][j] += diffElement * cofvar[alpha][beta] * pdscai * pdscaj;
+      			}
+      		}
+    	}
+  	}
+
+}
+
+double Element::prodScal(std::vector<std::vector<double> > Mat1, std::vector<std::vector<double> > Mat2, int indiceAB, int indiceIJ){
+    float somme = 0;
+    for(int k = 0 ; k < 2 ; k++){
+        somme += Mat1[indiceIJ][k]*Mat2[indiceAB][k];
+    }
+    return somme;
+}
+
+
+int Element::returnQ(std::string type){
+	if(type == "Q1"){
+		return 9;
+	}
+	else if(type == "T1"|| type == "S1"){
+		return 3;
+	}
+    return 0;
+}
+
+
+void Element::intAret(std::vector<Node> coordAret){
+
+    // TO DO : MOVE IN Edge class ??
+
+    int d = 1;
+    
+    int q = returnQ("S1");
+    
+    quadraMethodS1.weightsPoints("S1");
+    
+    
+    for(int indicepts = 0 ; indicepts < q ; indicepts ++){
+        
+        std::vector<Node> pts = quadraMethodS1.getPoints();
+        std::vector<double> pds = quadraMethodS1.getWeights();
+
+        baseFunctions(pts[indicepts]);
+
+        baseDerFunctions(pts[indicepts]);
+        
+        std::vector<std::vector<double> > Jcob = matJacob(coordAret);
+        
+        std::vector<double> imagPoint = transFK(coordAret);
+        
+        double eltdif = pds[indicepts] * sqrt(Jcob[0][0]*Jcob[0][0] + Jcob[0][1]*Jcob[0][1]);
+        
+        double cofvarWW = FEMProblem::BN(imagPoint);
+        
+        WW(eltdif, cofvarWW);
+        
+
+        // TODO BRING THE NUMBER OF AR ET ?
+        int numAret = 1; // ?
+        double cofvarW = FEMProblem::FN(imagPoint, numAret);
+
+        W(eltdif, cofvarW);
+        
+    }
+
+}
+
+void Element::intElem(){
+
+}
 
 
 

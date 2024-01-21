@@ -3,6 +3,11 @@
 
 Node::Node(double x_, double y_, double z_, int id_) : x(x_), y(y_), z(z_), id(id_) {}
 
+Node::Node(double x_, double y_, double z_) : x(x_), y(y_), z(z_), id(-1) {}
+
+Node::Node(double x_, double y_) : x(x_), y(y_), z(0.0), id(-1.0) {}
+
+Node::Node(double x_) : x(x_), y(0.0), z(0.0), id(-1.0) {}
 
 double Node::getX() const{
     return x;

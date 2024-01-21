@@ -1,12 +1,16 @@
 #include "FEMParameters.h"
 
-FEMParameters::FEMParameters() : parameterFile("parameters.txt"){}
+FEMParameters::FEMParameters() : parameterFile("parameters.txt"){
+    if(!getParameterValue()){
+        std::cerr << "Error in the parameters" << parameterFile << std::endl;
+    }
+}
 
 bool FEMParameters::getParameterValue() {
     std::ifstream file(parameterFile);
 
     if (!file.is_open()) {
-        std::cerr << "Erreur : Impossible d'ouvrir le fichier " << parameterFile << std::endl;
+        std::cerr << "Error : Impossible to open the file " << parameterFile << std::endl;
         return false;
     }
 

@@ -57,7 +57,7 @@ double FOMEGA(std::vector<double> x){
     return 1.;
 }
 
-double FN(std::vector<double> x, int aret){
+double FN(std::vector<double> x, int numAret){
     // if(dom == 1){
     //     switch(nucas){
     //         case 1:
