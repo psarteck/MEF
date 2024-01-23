@@ -4,48 +4,33 @@ using namespace std;
 
 Mesh::Mesh(){}
 
-bool Mesh::loadMeshObj(const std::string& fileName) {
-    std::ifstream file(fileName);
 
-    if (!file.is_open()) {
-        std::cerr << "Erreur : Impossible d'ouvrir le fichier " << fileName << std::endl;
-        return false;
-    }
-
-    std::string line;
-    while (std::getline(file, line)) {
-        std::istringstream iss(line);
-        std::string token;
-        iss >> token;
-
-        if (token == "v") {
-            // Lire les coordonnées d'un nœud
-            double x, y, z;
-            iss >> x >> y >> z;
-            nodes.push_back(Node(x, y, z, nodes.size() + 1));
-        } else if (token == "f") {
-            // Lire les indices de nœuds d'un élément
-            std::vector<int> nodeIndices;
-            int index;
-            while (iss >> index) {
-                nodeIndices.push_back(index);
-            }
-
-            // Créer un élément avec les indices lus
-            elements.push_back(Element(elements.size() + 1, nodeIndices, nodes));
-        }
-    }
-
-    file.close();
-    return true;
+Node& Mesh::getNodeAt(int position){
+    return nodes.at(position);
 }
 
-Node& Mesh::getNode(int position){
-    return nodes.at(position);
+std::vector<Node> Mesh::getNodes(){
+    return nodes;
+}
+std::vector<Element> Mesh::getElements(){
+    return elements;
 }
 
 Edge& Mesh::getEdge(int position){
     return edges.at(position);
+}
+
+int Mesh::getDimension(){
+    return dimension;
+}
+int Mesh::getNodesNumber(){
+    return nodesNumber;
+}
+int Mesh::getTrianglesNumber(){
+    return elementNumber;
+}
+int Mesh::getEdgesNumber(){
+    return edgeNumber;
 }
 
 void Mesh::printMesh() const{
@@ -143,9 +128,9 @@ bool Mesh::loadMeshGmsh(const std::string& fileName){
     file >> nbEdges;
     
     for(int i = 0 ; i < nbEdges ; i++){
-        int x, y, z;
-        file >> x >> y >> z;
-        Edge newEdge(getNode(x-1), getNode(y-1));
+        int x, y, label;
+        file >> x >> y >> label;
+        Edge newEdge(getNodeAt(x-1), getNodeAt(y-1), label);
         edges.push_back(newEdge);
     }
 
@@ -157,7 +142,7 @@ bool Mesh::loadMeshGmsh(const std::string& fileName){
         int x, y, z, label;
         file >> x >> y >> z >> label;
         std::vector<int> nodeIdList = {x,y,z};
-        std::vector<Node> nodeList = {getNode(x-1),getNode(y-1),getNode(z-1)};
+        std::vector<Node> nodeList = {getNodeAt(x-1),getNodeAt(y-1),getNodeAt(z-1)};
         Element newEdge(i+1, nodeIdList, nodeList);
         elements.push_back(newEdge);
     }
@@ -167,6 +152,60 @@ bool Mesh::loadMeshGmsh(const std::string& fileName){
     // Fermer le fichier
     file.close();
 
+    nodesNumber = nbVertices;
+    edgeNumber = nbEdges;
+    elementNumber = nbTriangles;
+
     return true;
 
 }
+
+
+void Mesh::integrate(){
+    
+    // for(auto& element : elements){
+    //     element.cal1Elem();
+    // }
+}
+
+
+
+
+
+// A REFAIRE : 
+
+// bool Mesh::loadMeshObj(const std::string& fileName) {
+//     std::ifstream file(fileName);
+
+//     if (!file.is_open()) {
+//         std::cerr << "Erreur : Impossible d'ouvrir le fichier " << fileName << std::endl;
+//         return false;
+//     }
+
+//     std::string line;
+//     while (std::getline(file, line)) {
+//         std::istringstream iss(line);
+//         std::string token;
+//         iss >> token;
+
+//         if (token == "v") {
+//             // Lire les coordonnées d'un nœud
+//             double x, y, z;
+//             iss >> x >> y >> z;
+//             nodes.push_back(Node(x, y, z, nodes.size() + 1));
+//         } else if (token == "f") {
+//             // Lire les indices de nœuds d'un élément
+//             std::vector<int> nodeIndices;
+//             int index;
+//             while (iss >> index) {
+//                 nodeIndices.push_back(index);
+//             }
+
+//             // Créer un élément avec les indices lus
+//             elements.push_back(Element(elements.size() + 1, nodeIndices, nodes));
+//         }
+//     }
+
+//     file.close();
+//     return true;
+// }

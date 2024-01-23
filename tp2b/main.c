@@ -9,7 +9,8 @@ int main(){
 	
 	//char ficmai[] = "ficMaillage.txt";
 	//char ficmai[] = "car1x1q_4.txt";
-	char ficmai[] = "car3x3t_3.txt";
+	// char ficmai[] = "car3x3t_3.txt";
+	char ficmai[] = "car1x1t_1.txt";
     char ficnum[] = "NUMREF.Test";
 	int t, n, m, p, q;
     // t : type

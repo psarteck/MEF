@@ -28,6 +28,9 @@ class Mesh {
         std::vector<Edge> edges;
         std::vector<Element> elements;
         int dimension;
+        int nodesNumber;
+        int edgeNumber;
+        int elementNumber;
     public :
         Mesh();
 
@@ -37,8 +40,20 @@ class Mesh {
 
         void printMesh() const;
 
-        Node& getNode(int position);
+        void integrate();
+
+        Node& getNodeAt(int position);
+
+        std::vector<Node> getNodes();
+        std::vector<Element> getElements();
+        // std::vector<Node> getNodes();
+
         Edge& getEdge(int position);
+        int getDimension();
+        int getNodesNumber();
+        int getTrianglesNumber();
+        int getEdgesNumber();
+
 
         std::unordered_set<int> getBoundaryNodes() const;
 

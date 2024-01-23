@@ -5,7 +5,7 @@ border Gamma2(t=0,1){x=1;y=t;;label=2;}
 border Gamma3(t=0,1){x=1-t;y=1;;label=3;}
 border Gamma4(t=0,1){x=0;y=t;;label=4;}
 
-int n = 10;
+int n = 1a;
 mesh Th = buildmesh(Gamma1(n)+Gamma2(n)+Gamma3(n)+Gamma4(-n));
 
 savemesh(Th, "square.txt");

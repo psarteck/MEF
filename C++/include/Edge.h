@@ -8,8 +8,9 @@ class Edge{
     private :
         Node node1;
         Node node2;
+        int label;
     public :
-        Edge(Node& node1_, Node& node2_);
+        Edge(Node& node1_, Node& node2_, int label_);
         
 };
 

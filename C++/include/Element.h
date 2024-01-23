@@ -1,6 +1,7 @@
 #ifndef ELEMENT_H
 #define ELEMENT_H
 
+#include <iomanip>
 #include <vector>
 #include <string>
 #include "Edge.h"
@@ -27,8 +28,8 @@ class Element {
         std::vector<Node> nodes;
         std::vector<double> valBase;
         MatrixD valDerBase;
-        MatrixD elemMatrix;
-        std::vector<double> fElem;
+        // MatrixD elemMatrix;
+        // std::vector<double> fElem;
 
         Quadrature quadraMethodS1;
         // Quadrature quadraMethodT1;
@@ -47,13 +48,19 @@ class Element {
         std::vector<double> transFK(std::vector<Node> selectNodes);
         std::vector<std::vector<double> > matJacob(std::vector<Node> selectNodes);
         std::vector<std::vector<double> > invert2x2(std::vector<std::vector<double> >& mat, double& det);
-        void ADWDW(double diffElement, std::vector<double> point, std::vector<std::vector<double> > cofvar, std::vector<std::vector<double> > matInv);
-        void WW(double diffElement, double cofvar);
-        void W(double diffElement, double cofvar);
+        void ADWDW(double diffElement, std::vector<double> point, std::vector<std::vector<double> > cofvar, std::vector<std::vector<double> > matInv, std::vector<std::vector<double> >& elemMatrix);
+        void WW(double diffElement, double cofvar, std::vector<std::vector<double> >& elemMatrix);
+        void W(double diffElement, double cofvar, std::vector<double> fElem);
         double prodScal(std::vector<std::vector<double> > Mat1, std::vector<std::vector<double> > Mat2, int indiceAB, int indiceIJ);
 
-        void intAret(std::vector<Node> coordAret);
-        void intElem();
+        void intAret(std::vector<std::vector<double> >& elemMatrix, std::vector<double> fElem, std::vector<Node> coordAret);
+        void intElem(std::vector<std::vector<double> >& elemMatrix, std::vector<double>& fElem, std::vector<Node> selectNodes);
+
+        void cal1Elem(std::vector<std::vector<double> >& MatElem, std::vector<double>& SMbrElem,
+              std::vector<int>& NuDElem, std::vector<double>& uDElem);
+
+        void impCalEl(int K, int typEl, int nbneel, std::vector<std::vector<double> > MatElem, std::vector<double> SMbrElem,
+              std::vector<int> NuDElem, std::vector<double> uDElem);
 
         int returnQ(std::string type);
         const int getId() const;
@@ -61,6 +68,7 @@ class Element {
         const std::vector<int>& getNodeIDs() const;
 
         Node getNodeById(int nodeId) const;
+
 
 };
 
