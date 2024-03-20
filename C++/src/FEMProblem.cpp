@@ -15,7 +15,7 @@ F_OMEGA
 // extern int dom;
 
 double aij(double i, double j){
-    return 0;
+    return (i == j);
 }
 
 double A11(std::vector<double> x){
@@ -35,7 +35,7 @@ double A22(std::vector<double> x){
 }
 
 double BN(std::vector<double> x){
-    return 0;
+    return 1;
 }
 
 double FOMEGA(std::vector<double> x){
@@ -165,7 +165,7 @@ double UD(std::vector<double> x){
     //         return 0;
     //         break;
     //     }
-    return 1.;
+    return 100*x[0]+x[1];
 }
 
 }

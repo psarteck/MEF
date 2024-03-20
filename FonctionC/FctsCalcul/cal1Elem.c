@@ -77,7 +77,7 @@ void cal1Elem(int nRefDom, int nbRefD0, int *numRefD0, int nbRefD1, int *numRefD
                     numNaret(typeEl, ptsAret, i+1);
                     
                     selectPts(nbneAr, ptsAret, coordEl, coorAr);
-                    intAret(3, nbneAr, coorAr, MatAret, SMbrAret, nRefArEl[i]);
+                    // intAret(3, nbneAr, coorAr, MatAret, SMbrAret, nRefArEl[i]);
                     
                     
                     for (int m = 0 ; m < nbneAr ; m++){

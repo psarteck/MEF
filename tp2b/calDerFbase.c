@@ -11,7 +11,6 @@
 
 void calDerFbase(float **valDBase, int t, float *pts){
     
-    
     switch(t){
             
         case 1:

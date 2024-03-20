@@ -1,5 +1,18 @@
+/*---------------------------------------------------------------------------*\
+
+ ██████╗ ██╗  ██╗██╗   ██╗     ███████╗███╗   ███╗
+██╔═══██╗╚██╗██╔╝╚██╗ ██╔╝     ██╔════╝████╗ ████║
+██║   ██║ ╚███╔╝  ╚████╔╝█████╗█████╗  ██╔████╔██║
+██║   ██║ ██╔██╗   ╚██╔╝ ╚════╝██╔══╝  ██║╚██╔╝██║
+╚██████╔╝██╔╝ ██╗   ██║        ██║     ██║ ╚═╝ ██║
+ ╚═════╝ ╚═╝  ╚═╝   ╚═╝        ╚═╝     ╚═╝     ╚═╝
+ * 
+ * Copyright (C) 2024 by Matthieu PETIT
+\*---------------------------------------------------------------------------*/
 #ifndef NODE_H
 #define NODE_H
+
+#include <vector>
 
 // template <class T>
 class Node{
@@ -19,6 +32,9 @@ class Node{
         Node(double x_, double y_);
         Node(double x_);
 
+
+        bool operator==(const Node& other) const;
+        double operator[](int index) const;
 
         double getX() const;
         double getY() const;

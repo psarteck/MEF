@@ -18,6 +18,8 @@ set(SOURCES
     src/Quadrature.cpp
     src/FEMUtilities.cpp
     src/FEMProblem.cpp
+    src/Solver.cpp
+    src/FEMIntegrale.cpp
     testmain.cpp
 )
 

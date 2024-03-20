@@ -1,3 +1,7 @@
-mesh="square.msh"
+mesh=square.msh
+HomogeneousDirichletLabel=1
+DirichletLabel=4
+NeumannLabel=2 3
+DomainLabels=0
 quadrature=gauss 
 lagrange=P1

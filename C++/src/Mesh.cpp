@@ -9,14 +9,17 @@ Node& Mesh::getNodeAt(int position){
     return nodes.at(position);
 }
 
-std::vector<Node> Mesh::getNodes(){
+const std::vector<Node>& Mesh::getNodes() const{
     return nodes;
 }
-std::vector<Element> Mesh::getElements(){
+const std::vector<Element>& Mesh::getElements() const{
     return elements;
 }
+const std::vector<Edge>& Mesh::getEdges() const{
+    return edges;
+}
 
-Edge& Mesh::getEdge(int position){
+Edge& Mesh::getEdgeAt(int position){
     return edges.at(position);
 }
 
@@ -24,7 +27,7 @@ int Mesh::getDimension(){
     return dimension;
 }
 int Mesh::getNodesNumber(){
-    return nodesNumber;
+    return nodes.size();
 }
 int Mesh::getTrianglesNumber(){
     return elementNumber;
@@ -50,6 +53,12 @@ void Mesh::printMesh() const{
         for (int nodeID : element.getNodeIDs()) {
             std::cout << nodeID << " ";
         }
+        // std::cout << std::endl;
+        // cout << "Edges : " << endl;
+        // std::vector<Edge> returnEdges = element.getEdges();
+        // for(auto edge : returnEdges){
+        //     edge.printEdge();
+        // }
         std::cout << std::endl;
     }
 }
@@ -117,9 +126,15 @@ bool Mesh::loadMeshGmsh(const std::string& fileName){
     file >> nbVertices ;
 
     for(int i = 0 ; i < nbVertices ; i++){
-        double x, y, z;
-        file >> x >> y >> z;
-        Node newNode(x,y,z,i+1);
+        double x, y, z(0.0), label;
+        if (dimension == 2){
+            file >> x >> y >> label;
+        }
+        else if (dimension == 3){
+            file >> x >> y >> z >> label;
+        }
+        
+        Node newNode(x,y,z,label);
         nodes.push_back(newNode);
     }
 
@@ -128,23 +143,25 @@ bool Mesh::loadMeshGmsh(const std::string& fileName){
     file >> nbEdges;
     
     for(int i = 0 ; i < nbEdges ; i++){
-        int x, y, label;
-        file >> x >> y >> label;
-        Edge newEdge(getNodeAt(x-1), getNodeAt(y-1), label);
+        int node1, node2, label;
+        file >> node1 >> node2 >> label;
+        Edge newEdge(getNodeAt(node1-1), getNodeAt(node2-1), label);
         edges.push_back(newEdge);
     }
 
     while (std::getline(file, line) && line.find("Triangles") != 0) {}
 
     file >> nbTriangles;
-    cout<< "nbrt : "<<nbTriangles<<endl;
+
     for(int i = 0 ; i < nbTriangles ; i++){
         int x, y, z, label;
         file >> x >> y >> z >> label;
         std::vector<int> nodeIdList = {x,y,z};
         std::vector<Node> nodeList = {getNodeAt(x-1),getNodeAt(y-1),getNodeAt(z-1)};
-        Element newEdge(i+1, nodeIdList, nodeList);
-        elements.push_back(newEdge);
+
+        // std::vector<Edge> edgeList = {getNodeAt(x-1),getNodeAt(y-1),getNodeAt(z-1)};
+        Element newElem(i+1, nodeIdList, nodeList);
+        elements.push_back(newElem);
     }
 
 
@@ -160,6 +177,133 @@ bool Mesh::loadMeshGmsh(const std::string& fileName){
 
 }
 
+
+bool Mesh::loadMsh(const std::string& fileName){
+    int nbVertices;
+    int nbEdges;
+    int nbTriangles;
+
+    // Ouvrir le fichier en lecture
+    std::ifstream file(fileName);
+
+    // Vérifier si le fichier est ouvert correctement
+    if (!file.is_open()) {
+        std::cerr << "Error : impossible to open the file : "<< fileName << std::endl;
+        return 1;
+    }
+
+    file >> nbVertices >> nbTriangles >> nbEdges;
+
+    for(int i = 0 ; i < nbVertices ; i++){
+        double x,y,label;
+        file >> x >> y >> label;
+        nodes.push_back(Node(x, y, 0.0, i+1));
+    }
+
+    for(int i = 0 ; i < nbTriangles ; i++){
+        int id1, id2, id3, label;
+        file >> id1 >> id2 >> id3 >> label;
+        std::vector<Node> nodeList = {getNodeAt(id1-1), getNodeAt(id2-1), getNodeAt(id3-1)};
+        std::vector<int> nodeIdList = {id1,id2,id3};
+        elements.push_back(Element(label, nodeIdList, nodeList));
+    }
+
+    for(int i = 0 ; i < nbEdges ; i++){
+        int id1, id2, label;
+        file >> id1 >> id2 >> label;
+        std::vector<Node> nodeList = {getNodeAt(id1-1), getNodeAt(id2-1)};
+        edges.push_back(Edge(nodeList, label));
+    }
+    return true;
+
+}
+
+bool Mesh::loadMeshGmsh2(const std::string& fileName){
+// TO DO changer cette merde 
+    int nbVertices;
+    int nbEdges;
+    int nbTriangles;
+
+    // Ouvrir le fichier en lecture
+    std::ifstream file(fileName);
+
+    // Vérifier si le fichier est ouvert correctement
+    if (!file.is_open()) {
+        std::cerr << "Error : impossible to open the file : "<< fileName << std::endl;
+        return 1;
+    }
+
+    // Lire les lignes du fichier jusqu'à ce que la ligne commence par "Dimension"
+    std::string line;
+    while (std::getline(file, line) && line.find("Dimension") != 0) {}
+    file >> dimension ;
+    while (std::getline(file, line) && line.find("Vertices") != 0) {}
+    file >> nbVertices ;
+
+    for(int i = 0 ; i < nbVertices ; i++){
+        double x, y, z(0.0), label;
+        if (dimension == 2){
+            file >> x >> y >> label;
+        }
+        else if (dimension == 3){
+            file >> x >> y >> z >> label;
+        }
+        
+        Node newNode(x,y,z,label);
+        nodes.push_back(newNode);
+    }
+
+
+    while (std::getline(file, line) && line.find("Edges") != 0) {}
+    file >> nbEdges;
+    
+    for(int i = 0 ; i < nbEdges ; i++){
+        int node1, node2, label;
+        file >> node1 >> node2 >> label;
+        Edge newEdge(getNodeAt(node1-1), getNodeAt(node2-1), label);
+        edges.push_back(newEdge);
+    }
+
+    while (std::getline(file, line) && line.find("Triangles") != 0) {}
+
+    file >> nbTriangles;
+    for(int i = 0 ; i < nbTriangles ; i++){
+        int x, y, z, label;
+        file >> x >> y >> z >> label;
+        std::vector<int> nodeIdList = {x,y,z};
+        std::vector<Node> nodeList = {getNodeAt(x-1),getNodeAt(y-1),getNodeAt(z-1)};
+
+
+        std::vector<Edge> edgeList = {Edge(getNodeAt(x-1),getNodeAt(y-1),0), Edge(getNodeAt(y-1),getNodeAt(z-1),0), Edge(getNodeAt(z-1),getNodeAt(x-1),0)};
+
+        // for(auto edge : edgeList){
+        //     edge.setLabel(edge.isOnEdge(edges));
+        // }
+        
+        Element newElem(i+1, nodeIdList, nodeList, edgeList);
+        elements.push_back(newElem);
+    }
+
+
+
+    // Fermer le fichier
+    file.close();
+
+    nodesNumber = nbVertices;
+    edgeNumber = nbEdges;
+    elementNumber = nbTriangles;
+
+    return true;
+
+}
+
+
+
+void Mesh::printEdges(){
+    for(auto edge : edges){
+        edge.printEdge();
+    }
+}
 
 void Mesh::integrate(){
     

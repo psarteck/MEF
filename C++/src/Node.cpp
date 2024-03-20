@@ -9,6 +9,20 @@ Node::Node(double x_, double y_) : x(x_), y(y_), z(0.0), id(-1.0) {}
 
 Node::Node(double x_) : x(x_), y(0.0), z(0.0), id(-1.0) {}
 
+
+bool Node::operator==(const Node& other) const {
+    return (x == other.x) && (y == other.y) && (z == other.z) ;
+}
+
+double Node::operator[](int index) const {
+    if (index == 0)
+        return getX();
+    else if (index == 1)
+        return getY();
+    else
+        throw std::out_of_range("Index out of range");
+}
+
 double Node::getX() const{
     return x;
 }

@@ -29,13 +29,13 @@ void intElem(int type, int nbneel, float **coorEl, float **matelm, float *felm){
         
         calFbase(fctB, type, &pts[2*indicepts]);
         calDerFbase(fctDerB, type, &pts[2*indicepts]);
+
         matJacob(coorEl, fctDerB, 2, mat, nbneel);
+
         invertM2x2(&deter, mat, matInv);
         transFK(coorEl, fctB, nbneel, imagePts);
-        
 
         eltdif = deter * pds[indicepts];
-        
         
         cofvarAD[0][0] = A11(imagePts);
         cofvarAD[0][1] = A12(imagePts);
@@ -43,11 +43,10 @@ void intElem(int type, int nbneel, float **coorEl, float **matelm, float *felm){
         cofvarAD[1][1] = A22(imagePts);
         
         ADWDW(nbneel, fctDerB, eltdif, cofvarAD, matInv, matelm);
-
+        
         cofvarWW = A00(imagePts);
         
         WW(nbneel, fctB, eltdif, cofvarWW, matelm);
-        
                 
         cofvarW = FOMEGA(imagePts);
         

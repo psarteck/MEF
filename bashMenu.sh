@@ -8,6 +8,6 @@ clear
 
 gfortran -c ./FonctionsFortran/*.f -std=legacy && mv *.o ./FonctionsFortran 
 gcc -Wall ./FonctionC/*.c ./FonctionC/Main/main.c ./FonctionC/FctsAssemblage/*.c ./FonctionC/FctsCalcul/*.c \
-    ./FonctionsFortran/*.o -L/opt/homebrew/Cellar/gcc/12.2.0/bin/../lib/gcc/current -lgfortran -lm && ./a.out 
+    ./FonctionsFortran/*.o -L/opt/homebrew/Cellar/gcc/13.2.0/bin/../lib/gcc/current -lgfortran -lm && ./a.out 
 
 

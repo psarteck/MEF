@@ -68,10 +68,10 @@ void assemblage(int NbLign, int NbCoeff, int nbEls, int typeEl, int nbArPaEl,
             selectPts(nbNePaEl, ngnel[El], coord, coordEl);
             
             cal1Elem(nRefDom, nbRefD0, numRefD0, nbRefD1, numRefD1, nbRefF1, numRefF1, typeEl, nbNePaEl, coordEl, nbArPaEl, nRefAr[El], MatElem, SMbrElem, NuDElem, uDElem);
+
             
             for(int i = 0 ; i < nbNePaEl ; i++){
-                I = ngnel[El][i];
-                
+                I = ngnel[El][i];                
                 if(NuDElem[i] == -1){
                     NumDLDir[I-1] = -I;
                     ValDLDir[I-1] = uDElem[i];

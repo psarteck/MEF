@@ -21,6 +21,17 @@ void cal1Elem(int nRefDom, int nbRefD0, int *numRefD0, int nbRefD1, int *numRefD
     
     intElem(typeEl, nbneel, coordEl, MatElem, SMbrElem);
     
+    // printf("MAtel : \n");
+    // for(int i = 0 ; i < nbneel ; i++){
+    //     for(int j = 0 ; j < nbneel ; j++){
+    //         printf("%f ", MatElem[i][j]);
+    //     }
+    //     printf("\n");
+    // }
+    // printf("SCMERL : \n");
+    // for(int i = 0 ; i < nbneel ; i++){
+    //     printf("%f ", SMbrElem[i]);
+    // }
     
     float *coorAr[nbneel];
     int ptsAret[nbneel];
@@ -77,6 +88,17 @@ void cal1Elem(int nRefDom, int nbRefD0, int *numRefD0, int nbRefD1, int *numRefD
                     intAret(3, nbneAr, coorAr, MatAret, SMbrAret);
                     
                     
+                    // printf("Mataret \n");
+                    // for(int i = 0 ; i < nbneAr ; i++){
+                    //     for(int j = 0 ; j < nbneAr ; j++){
+                    //         printf("%f ", MatAret[i][j]);
+                    //     }
+                    //     printf("\n");
+                    // }
+                    printf("SMbrAret \n");
+                    for(int j = 0 ; j < nbneAr ; j++){
+                            printf("%f ", SMbrAret[j]);
+                    }
                     
                     
                     for (int m = 0 ; m < nbneAr ; m++){

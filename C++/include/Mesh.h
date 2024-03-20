@@ -1,3 +1,14 @@
+/*---------------------------------------------------------------------------*\
+
+ ██████╗ ██╗  ██╗██╗   ██╗     ███████╗███╗   ███╗
+██╔═══██╗╚██╗██╔╝╚██╗ ██╔╝     ██╔════╝████╗ ████║
+██║   ██║ ╚███╔╝  ╚████╔╝█████╗█████╗  ██╔████╔██║
+██║   ██║ ██╔██╗   ╚██╔╝ ╚════╝██╔══╝  ██║╚██╔╝██║
+╚██████╔╝██╔╝ ██╗   ██║        ██║     ██║ ╚═╝ ██║
+ ╚═════╝ ╚═╝  ╚═╝   ╚═╝        ╚═╝     ╚═╝     ╚═╝
+ * 
+ * Copyright (C) 2024 by Matthieu PETIT
+\*---------------------------------------------------------------------------*/
 #ifndef MESH_C
 #define MESH_C
 
@@ -28,6 +39,7 @@ class Mesh {
         std::vector<Edge> edges;
         std::vector<Element> elements;
         int dimension;
+        
         int nodesNumber;
         int edgeNumber;
         int elementNumber;
@@ -36,7 +48,9 @@ class Mesh {
 
         bool loadMeshObj(const std::string& fileName);
 
+        bool loadMsh(const std::string& fileName);
         bool loadMeshGmsh(const std::string& fileName);
+        bool loadMeshGmsh2(const std::string& fileName);
 
         void printMesh() const;
 
@@ -44,11 +58,12 @@ class Mesh {
 
         Node& getNodeAt(int position);
 
-        std::vector<Node> getNodes();
-        std::vector<Element> getElements();
+        const std::vector<Node>& getNodes() const;
+        const std::vector<Element>& getElements() const;
+        const std::vector<Edge>& getEdges() const;
         // std::vector<Node> getNodes();
 
-        Edge& getEdge(int position);
+        Edge& getEdgeAt(int position);
         int getDimension();
         int getNodesNumber();
         int getTrianglesNumber();
@@ -56,6 +71,8 @@ class Mesh {
 
 
         std::unordered_set<int> getBoundaryNodes() const;
+
+        void printEdges();
 
 };
 
