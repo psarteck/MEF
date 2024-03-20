@@ -26,7 +26,7 @@ fi
 chaine=$(cat "$fichier_chaine")
 
 # Parcours des fichiers .h dans le dossier spécifié
-for fichier in "$dossier"/*.h; do
+for fichier in "$dossier"/*.cpp; do
     if [ -f "$fichier" ]; then
         # Création d'un fichier temporaire pour stocker le contenu original du fichier .h
         fichier_temp=$(mktemp)

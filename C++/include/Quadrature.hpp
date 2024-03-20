@@ -9,41 +9,37 @@
  * 
  * Copyright (C) 2024 by Matthieu PETIT
 \*---------------------------------------------------------------------------*/
-#ifndef FEM_PARAMETERS_H
-#define FEM_PARAMETERS_H
+#ifndef QUADRATURE_H
+#define QUADRATURE_H
 
-#include "Mesh.h"
+#include "Node.hpp"
 #include <string>
 
-class FEMParameters{
+// #include "FEMParameters.hpp"
+
+class Quadrature{
 private:
-    std::string mesh;
-    std::string lagrange;
-    std::string quadrature;
-    std::string parameterFile;
-    std::vector<std::string> dirichletLabels;
-    std::vector<std::string> homogeneousDirichletLabels;
-    std::vector<std::string> neumannLabels;
-    std::vector<std::string> domainLabels;
+    std::string methodName;
+    std::string elementType;
+    int order;
 
+    // FEMParameters parameters;
 
+    std::vector<double> weights;
+    std::vector<Node> points;
 public:
-    FEMParameters();
+    Quadrature(std::string methodName_, std::string elementType_, int order_);
+    // Quadrature(FEMParameters parameters);
+    Quadrature(){};
 
-    bool getParameterValue();
 
-    void printLabel(const std::vector<std::string> labels);
 
-    const std::string& getMeshName() const;
-    const std::string& getLagrange() const;
-    const std::string& getQuadrature() const;
+    void weightsPoints(std::string elementType);
 
-    const std::vector<std::string>& getDirichletLabels() const;
-    const std::vector<std::string>& getHomogeneousDirichletLabels() const;
-    const std::vector<std::string>& getNeumannLabels() const;
-    const std::vector<std::string>& getDomainLabels() const;
+    std::vector<double> getWeights();
+    std::vector<Node> getPoints();
+
 };
-
 
 
 

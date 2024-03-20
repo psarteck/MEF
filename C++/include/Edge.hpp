@@ -13,12 +13,12 @@
 #define EDGE_H
 
 #include <vector>
-#include "Node.h"
+#include "Node.hpp"
 #include <iostream>
-#include "FEMIntegrale.h"
-#include "Quadrature.h"
+#include "FEMIntegrale.hpp"
+#include "Quadrature.hpp"
 
-#include "FEMUtilities.h"
+#include "FEMUtilities.hpp"
 
 
 // TO DOOOOO MAKE MORE NODE POSSIBLE THAN 2 !!!!!!!!!

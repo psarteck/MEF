@@ -14,8 +14,8 @@
 
 #include <iostream>
 #include <vector>
-#include "Mesh.h"
-#include "FEMParameters.h"
+#include "Mesh.hpp"
+#include "FEMParameters.hpp"
 
 class Solver {
 

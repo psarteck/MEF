@@ -9,38 +9,20 @@
  * 
  * Copyright (C) 2024 by Matthieu PETIT
 \*---------------------------------------------------------------------------*/
-#ifndef QUADRATURE_H
-#define QUADRATURE_H
+// MatrixTypes.h
 
-#include "Node.h"
-#include <string>
+#pragma once
 
-// #include "FEMParameters.h"
+#include <vector>
+#include "Node.hpp"
+#include "Element.hpp"
+#include "Edge.hpp"
 
-class Quadrature{
-private:
-    std::string methodName;
-    std::string elementType;
-    int order;
-
-    // FEMParameters parameters;
-
-    std::vector<double> weights;
-    std::vector<Node> points;
-public:
-    Quadrature(std::string methodName_, std::string elementType_, int order_);
-    // Quadrature(FEMParameters parameters);
-    Quadrature(){};
+// Définir un alias pour std::vector<std::vector<double>>
+using MatrixD = std::vector<std::vector<double> >;
+using VectorD = std::vector<double>;
+using VectorI = std::vector<int>;
+using VectorNo = std::vector<Node>;
+using VectorEd = std::vector<Edge>;
 
 
-
-    void weightsPoints(std::string elementType);
-
-    std::vector<double> getWeights();
-    std::vector<Node> getPoints();
-
-};
-
-
-
-#endif

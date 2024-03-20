@@ -4,10 +4,10 @@
 #include <cassert>
 #include <Eigen>
 
-#include "Mesh.h"
-#include "Node.h"
-#include "FEMParameters.h"
-#include "Solver.h"
+#include "Mesh.hpp"
+#include "Node.hpp"
+#include "FEMParameters.hpp"
+#include "Solver.hpp"
 
 using namespace std;
 

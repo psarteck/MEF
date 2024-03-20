@@ -15,13 +15,13 @@
 #include <iomanip>
 #include <vector>
 #include <string>
-#include "Edge.h"
-#include "Node.h"
+#include "Edge.hpp"
+#include "Node.hpp"
 #include <iostream>
-#include "FEMProblem.h"
-#include "Quadrature.h"
-#include "FEMUtilities.h"
-#include "FEMIntegrale.h"
+#include "FEMProblem.hpp"
+#include "Quadrature.hpp"
+#include "FEMUtilities.hpp"
+#include "FEMIntegrale.hpp"
 
 
 

@@ -20,8 +20,8 @@
 #include <sstream>
 #include <unordered_set>
 
-#include "Node.h"
-#include "Element.h"
+#include "Node.hpp"
+#include "Element.hpp"
 
 
 // using MatrixD = std::vector<std::vector<double> >;

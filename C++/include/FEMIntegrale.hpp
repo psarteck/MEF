@@ -16,8 +16,8 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include "Node.h"
-#include "FEMProblem.h"
+#include "Node.hpp"
+#include "FEMProblem.hpp"
 
 using namespace std;
     
