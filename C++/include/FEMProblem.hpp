@@ -11,6 +11,7 @@
 \*---------------------------------------------------------------------------*/
 #include <iostream>
 #include <vector>
+#include "Node.hpp"
 
 namespace FEMProblem {
     /*
@@ -40,7 +41,8 @@ namespace FEMProblem {
 
     double FN(std::vector<double> x, int numAret);
 
-    double UD(std::vector<double> x);
+    double UD(const std::vector<double>& x);
+    double UD(const Node& x);
 
 }
 

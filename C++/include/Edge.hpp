@@ -32,6 +32,7 @@
             std::vector<Node> nodeList;
 
             std::vector<int> nodeIdList;
+            int nbNodePerAret;
 
             Quadrature quadraMethodS1;
 
@@ -44,7 +45,7 @@
 
             Edge(std::vector<Node> nodeList_, int label_);
 
-            void intAret(std::vector<std::vector<double> >& elemMatrix, std::vector<double>& fElem, std::vector<Node> coordAret);
+            void intAret(std::vector<std::vector<double> >& elemMatrix, std::vector<double>& fElem);
 
             // bool isOnEdge(const std::vector<Edge>& edgeList);
             

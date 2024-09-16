@@ -11,6 +11,7 @@
 \*---------------------------------------------------------------------------*/
 #include "Solver.hpp"
 #include "System.hpp"
+#include <iostream>
 #include <memory>
 #include <thread>
 #include <vector>
@@ -93,31 +94,8 @@ void Solver::assemble(){
     
         element.intElem(MatElem, SMbrElem);
 
-        // for(int i = 0 ; i < 3 ; i++){
-        //     for(int j = 0 ; j < 3 ; j++){
-        //         cout << MatElem[i][j] << " ";
-        //     }
-        //     cout << endl;
-        // }
-        // cout << endl;
-        // for(int i = 0 ; i < 3 ; i++){
-        //     cout << SMbrElem[i] << " ";
-        // }
-        // cout << endl;
-
-        // int toto;
-        // cin >> toto;
-
         for (int i = 0 ; i < nodePerElement ; i++) {
             I = nodesIds[i];
-            // if(element.getNuDElem(i) == -1){
-            //     NumDLDir[I-1] = -I;
-            //     ValDLDir[I-1] = element.getuDElem(i);
-            // }
-            // else if(element.getNuDElem(i) == 0){
-            //     NumDLDir[I-1] = 0;
-            //     ValDLDir[I-1] = 0;
-            // }
 
             b[I-1] += SMbrElem[i];
 
@@ -131,16 +109,20 @@ void Solver::assemble(){
 
                 float value = MatElem[i][j];
 
+                std::vector<double> Arest(A.begin() + NbLine, A.end());
+
                 if(I > J){
                     assmat_(&I,&J,&value, tabAdPrCoefLi, tabNumCol, tabAdSuccLi, tabA, &NextAd);
+                    // assmat(I,J,value, AdPrCoefLi, NumCol, AdSuccLi, tabA, NextAd);
                 }
                 else if(I < J){
                     assmat_(&J,&I,&value, tabAdPrCoefLi, tabNumCol, tabAdSuccLi, tabA, &NextAd);
-                    // assmat_(&J,&I,&MatElem[i][j], AdPrCoefLi, NumCol, AdSuccLi, A[NbLine], &NextAd);
+                    // assmat(J,I,value, AdPrCoefLi, NumCol, AdSuccLi, tabA, NextAd);
                 }
                 else {
                     A[I-1] += MatElem[i][j];
                 }
+                // std::copy(Arest.begin(), Arest.end(), A.begin() + NbLine);
 
                 for(int i =  NbLine ; i < A.size(); i++){
                     A[i] = tabA[i-NbLine];
@@ -164,111 +146,79 @@ void Solver::assemble(){
     AdPrCoefLi[NbLine-1] = NextAd;
 
     for(auto edge : edgeList){
+        int nodeNumberAret = edge.getNodeNumber();
+        const std::vector<int>& nodesIds = edge.getNodeIDs();
+
         if(isDir0Edge(edge.getLabel())){
 
-            int nodeNumberAret = edge.getNodeNumber();
-            const std::vector<int>& nodesIds = edge.getNodeIDs();
             for(int i = 0 ; i < nodeNumberAret ; i++){
                 int I = nodesIds[i];
                 NumDLDir[I-1] = 0;
                 ValDLDir[I-1] = 0;
             }
         }
+        else if(isDirNHEdge(edge.getLabel())){
+
+            for(int i = 0 ; i < nodeNumberAret ; i++){
+                int I = nodesIds[i];
+                NumDLDir[I-1] = -I;
+                ValDLDir[I-1] = FEMProblem::UD(edge.getNodeAt(i));
+            }
+        }
+        else if(isNeumannEdge(edge.getLabel())){
+            //(TODO) Need to understand how assmat works 
+            int nbOfNode = edge.getNodeNumber();
+
+            std::vector<std::vector<double>> matAret(nbOfNode, std::vector<double>(nbOfNode, 0.0));
+            std::vector<double> fAret(nbOfNode, 0.0);
+
+            edge.intAret(matAret, fAret);
+
+            for (int i = 0 ; i < nbOfNode ; i++) {
+                int I = nodesIds[i];
+                b[I-1] += fAret[i];
+
+                for(int j = 0 ; j <= i ; j++){
+                    int J = nodesIds[j];
+
+                    int* tabAdPrCoefLi = vectorToArray(AdPrCoefLi);
+                    int* tabNumCol = vectorToArray(NumCol);
+                    int* tabAdSuccLi = vectorToArray(AdSuccLi);
+                    float* tabA = vectorToArray(A, NbLine);
+
+                    float value = matAret[i][j];
+
+                    if(I > J){
+                        assmat_(&I,&J,&value, tabAdPrCoefLi, tabNumCol, tabAdSuccLi, tabA, &NextAd);
+                    }
+                    else if(I < J){
+                        assmat_(&J,&I,&value, tabAdPrCoefLi, tabNumCol, tabAdSuccLi, tabA, &NextAd);
+                    }
+                    else {
+                        A[I-1] += matAret[i][j];
+                    }
+
+                    for(int i =  NbLine ; i < A.size(); i++){
+                        A[i] = tabA[i-NbLine];
+                    }
+                    for(int i =  0 ; i < AdPrCoefLi.size(); i++){
+                        AdPrCoefLi[i] = tabAdPrCoefLi[i];
+                    }
+                    for(int i =  0 ; i < NumCol.size(); i++){
+                        NumCol[i] = tabNumCol[i];
+                    }
+                    for(int i =  0 ; i < AdSuccLi.size(); i++){
+                        AdSuccLi[i] = tabAdSuccLi[i];
+                    }
+                }
+            }
+
+        }
+        else {
+            std::cerr << "Edge label " << edge.getLabel() << " is not correct." << std::endl;
+        }
+
     }
-
-        // // cout << "---------------------------------------" <<endl; 
-        // // element.impCalEl(i, 2, nodePerElement, MatElem, SMbrElem, std::vector<int>(3,0), std::vector<double>(3,0));
-        // // cout << "-----------------   -------------------" <<endl << endl;
-        // const std::vector<int>& nodesIds = element.getNodeIDs();
-        // for(int i = 0 ; i < nodePerElement ; i++){
-        //     int I = nodesIds[i];
-        //     b[I-1] += SMbrElem[i];
-        //     b2[I-1] += SMbrElem[i];
-        //     for(int j = 0 ; j <= i ; j++){
-        //         int J = nodesIds[j];
-        //         if(I > J){
-        //             A2[I-1][J-1] += MatElem[i][j];
-        //         } else if (J > I){
-        //             A2[J-1][I-1] += MatElem[i][j];
-        //         } else{
-        //             A2[I-1][J-1] += MatElem[i][j];
-        //         }
-        //         // if(I > J){
-        //         //     assmat(I,J, MatElem[i][j], AdPrCoefLi, NumCol, AdSuccLi, A.data() + NbLine, NextAd);
-        //         // }
-        //         // else if(I < J){
-        //         //     assmat(J, I, MatElem[i][j],AdPrCoefLi, NumCol, AdSuccLi, A.data() + NbLine, NextAd);
-        //         // }
-                    
-        //         // else {
-        //         //     A[I-1] += MatElem[i][j];
-        //         // }
-        //     }
-        // }
-        // FEMUtilities::printVec(AdPrCoefLi, "AdPrCoefLi");
-    // }
-
-//Integrate on the edges
-    // for(auto edge : edgeList){
-
-    //     // if(isDir0Edge(edge.getLabel())){
-    //     //     cout << "Dirichlet 0 : " << edge.getLabel() << endl;
-    //     // } else if (isDirNHEdge(edge.getLabel())) {
-    //     //     cout << "Dirichlet : " << edge.getLabel() << endl;
-    //     // } else if (isNeumannEdge(edge.getLabel())) {
-    //     //     cout << "Neummane : " << edge.getLabel() << endl;
-    //     // }
-
-    //     if(isDir0Edge(edge.getLabel())){
-    //         // continue;
-    //         int nodeNumberAret = edge.getNodeNumber();
-    //         const std::vector<int>& nodesIds = edge.getNodeIDs();
-    //         for(int i = 0 ; i < nodeNumberAret ; i++){
-    //             int I = nodesIds[i];
-    //             // cout << "I = " << I << endl;
-    //             b[I-1] = 0;
-    //             b2[I-1] = 0;
-    //         }
-    //     } else if (isDirNHEdge(edge.getLabel())) {
-    //         for(auto node : edge.getNodeList()){
-    //             A2[node.getId()-1][node.getId()-1] = FEMProblem::UD({node.getX(), node.getY()});
-    //         }
-    //     } else if (isNeumannEdge(edge.getLabel())) {
-    //         int nodeNumberAret = edge.getNodeNumber();
-    //         std::vector<std::vector<double> > MatAret(nodeNumberAret, std::vector<double>(nodeNumberAret, 0.0));
-
-    //         std::vector<double> SMbrElem(nodeNumberAret, 0.0);
-        
-    //         edge.intAret(MatAret, SMbrElem, edge.getNodeList());
-
-    //         const std::vector<int>& nodesIds = edge.getNodeIDs();
-    //         for(int i = 0 ; i < nodeNumberAret ; i++){
-    //             int I = nodesIds[i];
-    //             b[I-1] += SMbrElem[i];
-    //             b2[I-1] += SMbrElem[i];
-    //             for(int j = 0 ; j < i ; j++){
-    //                 int J = nodesIds[j];
-    //                 if(I >= J){
-    //                     A2[I-1][J-1] += MatAret[i][j];
-    //                 } else {
-    //                     A2[J-1][I-1] += MatAret[i][j];
-    //                 }
-
-                    
-    //             //     if(I > J){
-    //             //         assmat(I,J, MatAret[i][j], AdPrCoefLi, NumCol, AdSuccLi, A.data() + NbLine, NextAd);
-    //             //     }
-    //             //     else if(I < J){
-    //             //         assmat(J, I, MatAret[i][j],AdPrCoefLi, NumCol, AdSuccLi, A.data() + NbLine, NextAd);
-    //             //     }
-                        
-    //             //     else {
-    //             //         A[I-1] += MatAret[i][j];
-    //             //     }
-    //             }
-    //         }
-    //     }
-    // }
 
 }
 
@@ -302,7 +252,7 @@ bool Solver::isDirNHEdge(const int labelEdge){
 
 
 void Solver::assmat(int I, int J, double X, std::vector<int>& AdPrCoefLi, std::vector<int>& NumCol,
-            std::vector<int>& AdSuccLi, double * Matrice, int& NextAd) {
+            std::vector<int>& AdSuccLi, float* Matrice, int& NextAd) {
     int IAD = AdPrCoefLi[I - 1];
 
     if (I <= J) {
@@ -321,6 +271,7 @@ void Solver::assmat(int I, int J, double X, std::vector<int>& AdPrCoefLi, std::v
         }
 
         // L'élément A(i,j) existe : on l'incrémente et on sort
+        // Matrice[IAD -1] += X;
         *(Matrice + IAD - 1) += X;
         return;
     } else {
@@ -334,6 +285,7 @@ void Solver::assmat(int I, int J, double X, std::vector<int>& AdPrCoefLi, std::v
     // Création du coefficient A(i,j) (nouvelle ligne ou colonne)
     NumCol[NextAd - 1] = J;
     *(Matrice + NextAd - 1) = X;
+    // Matrice[NextAd - 1] = X;
     AdSuccLi[NextAd - 1] = 0;
     NextAd++;
 }

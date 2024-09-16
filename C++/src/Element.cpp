@@ -58,8 +58,6 @@
 
         std::vector<Node> pts = quadraMethodS1.getPoints();
         std::vector<double> pds = quadraMethodS1.getWeights();
-
-        cout << "number : " << number << endl;
             
         for(int indicepts = 0 ; indicepts < q ; indicepts ++){
                 

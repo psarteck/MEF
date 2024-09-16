@@ -20,6 +20,8 @@ Edge::Edge(Node& node1_, Node& node2_, int label_) : label(label_), type("S1"){
     nodeIdList.push_back(node1_.getId());
     nodeIdList.push_back(node2_.getId());
 
+    nbNodePerAret = nodeList.size();
+
     // quadraMethodS1 = Quadrature();
 
 }
@@ -29,12 +31,14 @@ Edge::Edge(std::vector<Node> nodeList_, int label_) : nodeList(nodeList_), label
     for(auto node : nodeList){
         nodeIdList.push_back(node.getId());
     }
+
+    nbNodePerAret = nodeList.size();
+
 }
 
 
-void Edge::intAret(std::vector<std::vector<double> >& elemMatrix, std::vector<double>& fElem, std::vector<Node> coordAret){
+void Edge::intAret(std::vector<std::vector<double> >& elemMatrix, std::vector<double>& fElem){
 
-    // TO DO : MOVE IN Edge class ??
     int d = 1;
     
     int q = FEMIntegrale::returnQ(type);
@@ -51,9 +55,9 @@ void Edge::intAret(std::vector<std::vector<double> >& elemMatrix, std::vector<do
 
         std::vector<std::vector<double> > baseDerFct = FEMIntegrale::baseDerFunctions(pts[indicepts], type);
         
-        std::vector<std::vector<double> > Jcob = FEMIntegrale::matJacob(coordAret, baseDerFct, type);
+        std::vector<std::vector<double> > Jcob = FEMIntegrale::matJacob(nodeList, baseDerFct, type);
         
-        std::vector<double> imagPoint = FEMIntegrale::transFK(coordAret, baseFct);
+        std::vector<double> imagPoint = FEMIntegrale::transFK(nodeList, baseFct);
 
         double eltdif = pds[indicepts] * sqrt(Jcob[0][0]*Jcob[0][0] + Jcob[0][1]*Jcob[0][1]);
         
@@ -61,10 +65,7 @@ void Edge::intAret(std::vector<std::vector<double> >& elemMatrix, std::vector<do
         
         FEMIntegrale::WW(nodeList, baseFct, eltdif, cofvarWW, elemMatrix);
         
-
-    //     // TODO BRING THE NUMBER OF AR ET ?
-        int numAret = 1; // ?
-        double cofvarW = FEMProblem::FN(imagPoint, numAret);
+        double cofvarW = FEMProblem::FN(imagPoint, label);
 
         FEMIntegrale::W(nodeList, baseFct, eltdif, cofvarW, fElem);
         

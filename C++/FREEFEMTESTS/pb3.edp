@@ -26,18 +26,27 @@ plot(Th, wait=1);
  
   fespace Vh(Th,P1);     
  Vh uh,vh;              
- func fomega=2*pi*pi*sin(pi*x)*sin(pi*y);                 
- func fN = 0;
- func a00 = 0;
+//  func fomega=2*pi*pi*sin(pi*x)*sin(pi*y);                 
+ func fomega=(1+2*pi*pi)*cos(pi*x)*cos(pi*y);                 
+ func fN = 10*x - 5*y;
+ func a00 = 1;
  func u0=0;                 
- func uD= 0;//100*x + y;
+ func uD= 100*x + y;
+ func fN1=pi * cos(pi * x) * sin(pi * y);
+ func fN2=pi * sin(pi * x) * cos(pi * y);
+ func fN3=pi * cos(pi * x) * sin(pi * y);
+ func fN4=pi * sin(pi * x) * cos(pi * y);
+ 
  
  problem laplace(uh,vh) = 
         int2d(Th) (grad(uh)' * grad(vh)) 
       + int2d(Th) (a00 * uh * vh) 
       - int2d(Th) (fomega * vh) 
-      // - int1d(Th, 2, 3) (fN * vh)
-      + on(1, 2, 3, 4, uh=u0);
+      - int1d(Th, 1) (fN1 * vh)
+      - int1d(Th, 2) (fN2 * vh)
+      - int1d(Th, 3) (fN3 * vh)
+      - int1d(Th, 4) (fN4 * vh);
+      // + on(1, 2, 3, uh=u0)
       // + on(4, uh=uD);
 
   laplace; // solve the problem plot(uh); // to see the result
@@ -45,7 +54,8 @@ plot(Th, wait=1);
   // plot(uh,value=true,fill=1);
 
 // Vh uex = cos(pi*x) * cos(pi*y);
-Vh uex = sin(pi*x) * sin(pi*y);
+// Vh uex = sin(pi*x) * sin(pi*y);
+Vh uex = cos(pi*x) * cos(pi*y);
 
 Vh error = abs(uh - uex);
 plot(error,value=true,fill=1, wait=1);

@@ -11,6 +11,7 @@
 \*---------------------------------------------------------------------------*/
 #include "FEMProblem.hpp"
 #include <cmath>
+#include <iostream>
 
 namespace FEMProblem {
     /*
@@ -35,7 +36,7 @@ double A11(std::vector<double> x){
 }
 
 double A00(std::vector<double> x){
-    return 0;
+    return 1;
 }
 
 double A12(std::vector<double> x){
@@ -67,102 +68,33 @@ double FOMEGA(std::vector<double> x){
     //         break;
     // }
     // return 32*(x[0]*(1-x[0])+x[1]*(1-x[1]));
-    return 2 * M_PI * M_PI * sin(M_PI * x[0]) * sin(M_PI * x[1]);
-    // return (1+2*M_PI*M_PI)*cos(M_PI*x[0])*cos(M_PI*x[1]);
+    // return 2 * M_PI * M_PI * sin(M_PI * x[0]) * sin(M_PI * x[1]);
+    return (1+2*M_PI*M_PI)*cos(M_PI*x[0])*cos(M_PI*x[1]);
 }
 
-double FN(std::vector<double> x, int numAret){
-    // if(dom == 1){
-    //     switch(nucas){
-    //         case 1:
-    //             return 0;
-    //             break;
-    //         case 2:
-    //             return 0;
-    //             break;
-    //         case 3:
-    //             switch(aret){
-    //                 case 2:
-    //                     return -M_PI*sin(M_PI*x[0])*cos(M_PI*x[1]);
-    //                     break;
-    //                 case 3:
-    //                     return -M_PI*cos(M_PI*x[0])*sin(M_PI*x[1]);
-    //                     break;
-    //                 case 4:
-    //                     return M_PI*sin(M_PI*x[0])*cos(M_PI*x[1]);
-    //                     break;
-    //                 case 1:
-    //                     return M_PI*cos(M_PI*x[0])*sin(M_PI*x[1]);
-    //                     break;
-    //                 default:
-    //                     printf("\nMauvaise valeur d'aret !\n");
-    //                     return 0;
-    //                     break;
-    //             }
-    //         default:
-    //             printf("\nMauvaise valeur de nucas !\n");
-    //             return 0;
-    //             break;
-    //     }
-    // }
-    // else if(dom == 2){
-    //     switch(nucas){
-    //         case 1:
-    //             switch(aret){
-    //                 case 2:
-    //                     return 16*x[0]*(1-x[0]);
-    //                     break;
-    //                 case 3:
-    //                     return 16*x[1]*(1-x[1]);
-    //                     break;
-    //                 default:
-    //                     printf("\nMauvaise valeur d'aret !\n");
-    //                     return 0;
-    //                     break;
-    //             }
-    //             break;
-    //         case 2:
-    //             switch(aret){
-    //                 case 2:
-    //                     return M_PI*cos(M_PI*x[0])*sin(M_PI*x[1]);
-    //                     break;
-    //                 case 3:
-    //                     return M_PI*sin(M_PI*x[0])*cos(M_PI*x[1]);
-    //                     break;
-    //                 default:
-    //                     printf("\nMauvaise valeur d'aret !\n");
-    //                     return 0;
-    //                     break;
-    //             }
-    //             break;
-    //         case 3:
-    //             switch(aret){
-    //                 case 2:
-    //                     return -M_PI*sin(M_PI*x[0])*cos(M_PI*x[1]);
-    //                     break;
-    //                 case 3:
-    //                     return -M_PI*cos(M_PI*x[0])*sin(M_PI*x[1]);
-    //                     break;
-    //                 default:
-    //                     printf("\nMauvaise valeur d'aret !\n");
-    //                     return 0;
-    //                     break;
-    //             }
-    //             break;
-    //         default:
-    //             printf("\nMauvaise valeur de nucas !\n");
-    //             return 0;
-    //             break;
-    //     }
-    // }
-    // else{
-    //     printf("\nMauvaise valeur du domaine !\n");
-    //     return 0;
-    // }
-    return 0.;
+double FN(std::vector<double> x_, int numAret){
+
+    double x(x_[0]);
+    double y(x_[1]);
+
+    switch (numAret) {
+        case 1:
+            return M_PI * cos(M_PI * x) * sin(M_PI * y);
+        case 2:
+            return - M_PI * sin(M_PI * x) * cos(M_PI * y);
+        case 3:
+            return - M_PI * cos(M_PI * x) * sin(M_PI * y);
+        case 4:
+            return M_PI * sin(M_PI * x) * cos(M_PI * y);
+
+        default:
+            std::cerr << "Edge label " <<   numAret <<"incorrect." << std::endl;
+            return 0.0;
+    }
+    // return 10*x[0] - 5*x[1];
 }
 
-double UD(std::vector<double> x){
+double UD(const std::vector<double>& x){
     
     // switch(nucas){
     //     case 1:
@@ -182,6 +114,10 @@ double UD(std::vector<double> x){
     // return 0;
     // return 100*x[0] + x[1];
     return 0.0;
+}
+
+double UD(const Node& x){
+    return 100 * x.getX() + x.getY();
 }
 
 }
