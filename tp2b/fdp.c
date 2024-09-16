@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 float aij(float i, float j){
     return (i == j);
@@ -22,11 +23,11 @@ float A22(float *x){
 }
 
 float BN(float *x){
-    return 0;
+    return 1;
 }
 
 float FOMEGA(float *x){
-    return 1;
+    return 1;//(1+2*M_PI*M_PI)*cos(M_PI*x[0])*cos(M_PI*x[1]);
 }
 
 float FN(float *x){

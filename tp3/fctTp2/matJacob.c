@@ -17,7 +17,6 @@ void matJacob(float **ai, float **valDBase, int d, float **Jcob, int Pk){
         for(int j = 0 ; j < d ; j++){
             for(int k = 0 ; k < Pk ; k++){
                 Jcob[i][j] = Jcob[i][j] + ai[k][i] * valDBase[k][j];
-                printf("i = %d, j = %d, k = %d, selectNodes : %f, valDerVase : %f\n", i, j, k, ai[k][i], valDBase[k][j]);
             }
         }
     }

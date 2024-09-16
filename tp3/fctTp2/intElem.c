@@ -41,11 +41,6 @@ void intElem(int type, int nbneel, float **coorEl, float **matelm, float *felm){
         
         matJacob(coorEl, fctDerB, 2, mat, nbneel);
 
-        printf("\nJcob\n");
-
-        for(int i  = 0 ; i < 2 ; i++){
-            printf("%f %f\n", mat[i][0], mat[i][1]);
-        }
 
         invertM2x2(&deter, mat, matInv);
         transFK(coorEl, fctB, nbneel, imagePts);

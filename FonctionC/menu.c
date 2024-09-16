@@ -15,34 +15,42 @@ extern int numSortie;
 
 void menu(char **ficmai, char **ficnum){
     
-    char maill[3];
-    char domC[3];
-    char finesseC[3];
-    char numSortieC[3];
-    char nucasC[3];
+    // char maill[3];
+    // char domC[3];
+    // char finesseC[3];
+    // char numSortieC[3];
+    // char nucasC[3];
     
     printf("Menu pour le TP5\nVous pouvez ici sélectionner le domaine et le problème à traiter.\n");
    // while(dom > 2||dom < 1){
-        printf("\nChoisissez le domaine que vous voulez étudier : 1 ou 2\n");
-        scanf("%s", domC);
+        // printf("\nChoisissez le domaine que vous voulez étudier : 1 ou 2\n");
+        // scanf("%s", domC);
   //  }
     //while(nucas > 3||nucas < 1){
-        printf("\nChoisissez le problème que vous voulez étudier : 1, 2 ou 3\n");
-        scanf("%s", nucasC);
-    //}
+    //     printf("\nChoisissez le problème que vous voulez étudier : 1, 2 ou 3\n");
+    //     scanf("%s", nucasC);
+    // //}
     
-    //while(nucas > 3||nucas < 1){
-        printf("\nChoisissez le type d'élément que vous voulez étudier : t pour triangle, q pour quadrangle\n");
-        scanf("%s", maill);
-    //}
+    // //while(nucas > 3||nucas < 1){
+    //     printf("\nChoisissez le type d'élément que vous voulez étudier : t pour triangle, q pour quadrangle\n");
+    //     scanf("%s", maill);
+    // //}
     
-    //while(nucas > 3||nucas < 1){
-        printf("\nChoisissez la finesse du maillage que vous voulez étudier : 2, 4, 8, 16, 32, 64\n");
-        scanf("%s", finesseC);
-    //}
+    // //while(nucas > 3||nucas < 1){
+    //     printf("\nChoisissez la finesse du maillage que vous voulez étudier : 2, 4, 8, 16, 32, 64\n");
+    //     scanf("%s", finesseC);
+    // //}
     
-    printf("\nVoulez vous imprimer la solution à l'écran (-1) ou dans un fichier (numéro de sortie > 0)\n");
-    scanf("%s", numSortieC);
+    // printf("\nVoulez vous imprimer la solution à l'écran (-1) ou dans un fichier (numéro de sortie > 0)\n");
+    // scanf("%s", numSortieC);
+
+    char domC[] = "1";
+    char nucasC[] = "2";
+    char maill[] = "t";
+    char finesseC[] = "4";
+    char numSortieC[] = "-1";
+
+
     
 
     char chaineM[] = "./FicMaillage/d";

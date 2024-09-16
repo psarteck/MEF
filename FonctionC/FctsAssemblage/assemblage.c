@@ -63,46 +63,57 @@ void assemblage(int NbLign, int NbCoeff, int nbEls, int typeEl, int nbArPaEl,
     
     // Boucle sur le nombre d'éléments et calcul des matrices élémentaires
         
-        for(int El = 0 ; El < nbEls ; El++){
-                    
-            selectPts(nbNePaEl, ngnel[El], coord, coordEl);
-            
-            cal1Elem(nRefDom, nbRefD0, numRefD0, nbRefD1, numRefD1, nbRefF1, numRefF1, typeEl, nbNePaEl, coordEl, nbArPaEl, nRefAr[El], MatElem, SMbrElem, NuDElem, uDElem);
-
-            
-            for(int i = 0 ; i < nbNePaEl ; i++){
-                I = ngnel[El][i];                
-                if(NuDElem[i] == -1){
-                    NumDLDir[I-1] = -I;
-                    ValDLDir[I-1] = uDElem[i];
-                }
-                else if(NuDElem[i] == 0){
-                    NumDLDir[I-1] = 0;
-                    ValDLDir[I-1] = 0;
-                }
-
-                SecMembre[I-1] += SMbrElem[i];
+    for(int El = 0 ; El < nbEls ; El++){
                 
-                for(int j = 0 ; j <= i ; j++){
-                    J = ngnel[El][j];
-                    if(I > J){
-                        assmat_(&I,&J,&MatElem[i][j],AdPrCoefLi, NumCol, AdSuccLi, &Matrice[NbLign], &NextAd);
-                    }
-                    else if(I < J){
-                        assmat_(&J,&I,&MatElem[i][j],AdPrCoefLi, NumCol, AdSuccLi, &Matrice[NbLign], &NextAd);
-                    }
-                        
-                    else {
-                        Matrice[I-1] += MatElem[i][j];
-                        
-                    }
+        selectPts(nbNePaEl, ngnel[El], coord, coordEl);
+        
+        cal1Elem(nRefDom, nbRefD0, numRefD0, nbRefD1, numRefD1, nbRefF1, numRefF1, typeEl, nbNePaEl, coordEl, nbArPaEl, nRefAr[El], MatElem, SMbrElem, NuDElem, uDElem);
+
+        for(int i = 0 ; i < 3; i++){
+            printf("%f ", SecMembre[i]);
+        }
+        printf("\n");
+        // for(int i = 0 ; i < 3; i++){
+        //     for(int j = 0 ; j < 3; j++){
+        //         printf("%f ", MatElem[i][j]);
+        //     }
+        //     printf("\n");
+        // }
+        // printf("\n");
+
+        
+        for(int i = 0 ; i < nbNePaEl ; i++){
+            I = ngnel[El][i];                
+            if(NuDElem[i] == -1){
+                NumDLDir[I-1] = -I;
+                ValDLDir[I-1] = uDElem[i];
+            }
+            else if(NuDElem[i] == 0){
+                NumDLDir[I-1] = 0;
+                ValDLDir[I-1] = 0;
+            }
+
+            SecMembre[I-1] += SMbrElem[i];
+            
+            for(int j = 0 ; j <= i ; j++){
+                J = ngnel[El][j];
+                if(I > J){
+                    assmat_(&I,&J,&MatElem[i][j],AdPrCoefLi, NumCol, AdSuccLi, &Matrice[NbLign], &NextAd);
+                }
+                else if(I < J){
+                    assmat_(&J,&I,&MatElem[i][j],AdPrCoefLi, NumCol, AdSuccLi, &Matrice[NbLign], &NextAd);
+                }
+                    
+                else {
+                    Matrice[I-1] += MatElem[i][j];
                 }
             }
-            
-            //impCalEl(El+1, typeEl, nbNePaEl, MatElem, SMbrElem, NuDElem, uDElem);
-            
         }
-        AdPrCoefLi[NbLign-1] = NextAd;
+        
+        //impCalEl(El+1, typeEl, nbNePaEl, MatElem, SMbrElem, NuDElem, uDElem);
+        
+    }
+    AdPrCoefLi[NbLign-1] = NextAd;
         
         //affsmd_(&NbLign, AdPrCoefLi,NumCol, AdSuccLi, Matrice, SecMembre,NumDLDir, ValDLDir);
     

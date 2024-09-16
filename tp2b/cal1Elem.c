@@ -86,7 +86,7 @@ void cal1Elem(int nRefDom, int nbRefD0, int *numRefD0, int nbRefD1, int *numRefD
                     
                     selectPts(nbneAr, ptsAret, coordEl, coorAr);
                     intAret(3, nbneAr, coorAr, MatAret, SMbrAret);
-                    
+                    // A DECOMMENTER
                     
                     // printf("Mataret \n");
                     // for(int i = 0 ; i < nbneAr ; i++){
@@ -95,10 +95,10 @@ void cal1Elem(int nRefDom, int nbRefD0, int *numRefD0, int nbRefD1, int *numRefD
                     //     }
                     //     printf("\n");
                     // }
-                    printf("SMbrAret \n");
-                    for(int j = 0 ; j < nbneAr ; j++){
-                            printf("%f ", SMbrAret[j]);
-                    }
+                    // printf("SMbrAret \n");
+                    // for(int j = 0 ; j < nbneAr ; j++){
+                    //         printf("%f ", SMbrAret[j]);
+                    // }
                     
                     
                     for (int m = 0 ; m < nbneAr ; m++){

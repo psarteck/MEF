@@ -23,6 +23,11 @@ void intElem(int type, int nbneel, float **coorEl, float **matelm, float *felm){
     float *pts= calloc(2*q, sizeof(float));
     float *pds = calloc(q, sizeof(float));
     ppquad(type, &pts, &pds);
+
+    // for (int i = 0; i < q; i++) {
+    //     printf("q = %f\n", pds[i]);
+    // }
+    // printf("\n");
     
     
     for(int indicepts = 0 ; indicepts < q ; indicepts ++){
@@ -31,6 +36,11 @@ void intElem(int type, int nbneel, float **coorEl, float **matelm, float *felm){
         calDerFbase(fctDerB, type, &pts[2*indicepts]);
 
         matJacob(coorEl, fctDerB, 2, mat, nbneel);
+
+        // for (int i = 0; i < 2 ; i++) {
+        //     printf("q = %f, %f\n", mat[i][0], mat[i][1]);
+        // }
+        // printf("\n");
 
         invertM2x2(&deter, mat, matInv);
         transFK(coorEl, fctB, nbneel, imagePts);

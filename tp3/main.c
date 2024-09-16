@@ -9,9 +9,10 @@ int main(){
     // Déclaration des variables
 	
 	//char ficmai[] = "ficMaillage.txt";
-	//char ficmai[] = "car1x1q_4.txt";
+	//char ficmai[] = "car1x1t_2.txt";
 	char ficmai[] = "./ficMai/car1x1t_1.txt";
     char ficnum[] = "./ficMai/NUMREF.Test";
+
 	int typeEl, nbNeTot, nbEls, nbNePaEl, nbArPaEl;
     // t : type
     // n : nb de noeuds totals
@@ -92,7 +93,7 @@ int main(){
         NumCol[i] = 0;
     }
     
-// Boucle sur le nombre d'éléements et calcul des matrices élémentaires
+// Boucle sur le nombre d'éléments et calcul des matrices élémentaires
     
     for(int El = 0 ; El < nbEls ; El++){
                 

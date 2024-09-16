@@ -1,10 +1,4 @@
 .cache
 .vscode
 build
-C++/.vscode
-tp2b
-tp3
-FonctionC
-FonctionsFortran
-*.o
-*/exeFEM
+**/exeFEM

@@ -9,8 +9,8 @@ int main(){
 	
 	//char ficmai[] = "ficMaillage.txt";
 	//char ficmai[] = "car1x1q_4.txt";
-	// char ficmai[] = "car3x3t_3.txt";
-	char ficmai[] = "car1x1t_1.txt";
+	char ficmai[] = "car3x3t_3.txt";
+	// char ficmai[] = "car1x1t_4.txt";
     char ficnum[] = "NUMREF.Test";
 	int t, n, m, p, q;
     // t : type
@@ -58,6 +58,9 @@ int main(){
         
         
         selectPts(p, ngnel[i], coord, coordEl);
+
+        // printf("Coord : %f, %f, %f\n", coord[0][0], coord[0][1], coord[0][2]);
+        // printf("Coord : %f, %f, %f\n", coordEl[0], coordEl[1], coordEl[2]);
         
         cal1Elem(nRefDom, nbRefD0, numRefD0, nbRefD1, numRefD1, nbRefF1, numRefF1, t, p, coordEl, q, nRefAr[i], MatElem, SMbrElem, NuDElem, uDElem);
         
