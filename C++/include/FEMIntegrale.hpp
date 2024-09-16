@@ -18,16 +18,19 @@
 #include <iostream>
 #include "Node.hpp"
 #include "FEMProblem.hpp"
+#include "Types.hpp"
 
 using namespace std;
-    
+
+
 namespace FEMIntegrale {
+    
 
     int returnQ(std::string type);
 
-    std::vector<double> baseFunctions(const Node& pts, const std::string type);
+    std::vector<double> baseFunctions(const Node& pts, const std::string type, const int number = 0);
 
-    std::vector<std::vector<double> > baseDerFunctions(const Node& pts, const std::string type);
+    std::vector<std::vector<double> > baseDerFunctions(const Node& pts, const std::string type, const int number = 0);
 
     std::vector<std::vector<double> > matJacob(const std::vector<Node> selectNodes, const std::vector<std::vector<double> > valDerBase, const std::string type);
 

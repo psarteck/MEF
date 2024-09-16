@@ -74,6 +74,43 @@ namespace FEMUtilities {
         cout << "\n";
     }
 
+
+    void saveResults(Eigen::VectorXd vec, std::string filename){
+
+        std::ofstream file(filename);
+
+        if (file.is_open()) {
+
+            for (int i = 0; i < vec.size(); ++i) {
+                file << vec(i) << "\n";
+            }
+
+            file.close();
+            std::cout << "Vector has been saved inside : " << filename << std::endl;
+        } else {
+            std::cerr << "Erreur : Impossible d'ouvrir le fichier " << filename << std::endl;
+            abort();
+        }
+    }
+
+    void saveResults(std::vector<double> vec, std::string filename){
+
+        std::ofstream file(filename);
+
+        if (file.is_open()) {
+
+            for (int i = 0; i < vec.size(); ++i) {
+                file << vec[i] << "\n";
+            }
+
+            file.close();
+            std::cout << "Vector has been saved inside : " << filename << std::endl;
+        } else {
+            std::cerr << "Erreur : Impossible d'ouvrir le fichier " << filename << std::endl;
+            abort();
+        }
+    }
+
     
     template void printMat<int>(std::vector<std::vector<int> > mat, std::string name);
     template void printMat<double>(std::vector<std::vector<double> > mat, std::string name);

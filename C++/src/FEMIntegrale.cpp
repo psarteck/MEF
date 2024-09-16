@@ -24,7 +24,7 @@ int FEMIntegrale::returnQ(std::string type){
 }
 
 
-std::vector<double> FEMIntegrale::baseFunctions(const Node& pts, const std::string type){
+std::vector<double> FEMIntegrale::baseFunctions(const Node& pts, const std::string type, const int number){
     std::vector<double> valBase;
     if(type == "Q1"){            
         valBase.push_back(pts.getX() - pts.getX()*pts.getY());
@@ -33,9 +33,17 @@ std::vector<double> FEMIntegrale::baseFunctions(const Node& pts, const std::stri
         valBase.push_back(pts.getX()*pts.getY() - pts.getY() - pts.getX() + 1);   
     }
     else if(type == "T1"){
-        valBase.push_back(pts.getX());
-        valBase.push_back(pts.getY());
-        valBase.push_back(1 - pts.getX() - pts.getY());
+        // if (number % 2 == 1){
+            valBase.push_back(pts.getX());
+            valBase.push_back(pts.getY());
+            valBase.push_back(1 - pts.getX() - pts.getY());
+        // }
+        // else {
+            // valBase.push_back(1 - pts.getX() - pts.getY());
+            // valBase.push_back(pts.getX());
+            // valBase.push_back(pts.getY());
+        // }
+        
     }
     else if(type == "S1"){
         valBase.push_back(pts.getX());
@@ -49,7 +57,8 @@ std::vector<double> FEMIntegrale::baseFunctions(const Node& pts, const std::stri
 }
 
 
-std::vector<std::vector<double> > FEMIntegrale::baseDerFunctions(const Node& pts, const std::string type){
+std::vector<std::vector<double> > FEMIntegrale::baseDerFunctions(const Node& pts, const std::string type, const int number){
+    // (TODO) Deleter number
     std::vector<std::vector<double> > valDerBase;
     if(type == "Q1"){            
         valDerBase.push_back({1-pts.getY(), -pts.getX()});
@@ -61,10 +70,16 @@ std::vector<std::vector<double> > FEMIntegrale::baseDerFunctions(const Node& pts
         // valDerBase.push_back({-pts.getX(), pts.getX(), 1-pts.getX(), pts.getX() - 1});   
     }
     else if(type == "T1"){
-
-        valDerBase.push_back({1, 0});
-        valDerBase.push_back({0, 1});
-        valDerBase.push_back({-1, -1});
+        // if (number % 2 == 1){
+            valDerBase.push_back({1, 0});
+            valDerBase.push_back({0, 1});
+            valDerBase.push_back({-1, -1});
+        // }
+        // else {
+            // valDerBase.push_back({-1, -1});
+            // valDerBase.push_back({1, 0});
+            // valDerBase.push_back({0, 1});
+        // }
         // valDerBase.push_back({1, 0, -1});
         // valDerBase.push_back({0, 1, -1});
     }
@@ -98,12 +113,14 @@ std::vector<std::vector<double> > FEMIntegrale::matJacob(const std::vector<Node>
     for(int i = 0 ; i < 2 ; i++){
         for(int j = 0 ; j < d ; j++){
             for(int k = 0 ; k < selectNodes.size() ; k++){
+
+                // cout << "Node : " << selectNodes[k][i] << endl;
                 Jcob[i][j] += selectNodes[k][i] * valDerBase[k][j];
                 // cout << "i =" << i << ", j = " << j << ", k = " << k << ", selectNodes : =" << selectNodes[k][i]  << ", valDerVase =" <<  valDerBase[k][j] << endl;
             }
         }
     }
-
+    // cout << endl;
     return Jcob;
 }
 

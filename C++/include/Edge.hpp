@@ -17,55 +17,55 @@
 #include <iostream>
 #include "FEMIntegrale.hpp"
 #include "Quadrature.hpp"
-
 #include "FEMUtilities.hpp"
 
 
 // TO DOOOOO MAKE MORE NODE POSSIBLE THAN 2 !!!!!!!!!
 // AFTER THAT GO TO SOLVER.CPP AND CHANGE THE WAY MATARET IS DEFINE
 
-class Edge{
-    private :
-        // Node node1;
-        // Node node2;
 
-        std::vector<Node> nodeList;
+    class Edge{
+        private :
+            // Node node1;
+            // Node node2;
 
-        std::vector<int> nodeIdList;
+            std::vector<Node> nodeList;
 
-        Quadrature quadraMethodS1;
+            std::vector<int> nodeIdList;
 
-        int label;
+            Quadrature quadraMethodS1;
 
-        std::string type;
+            int label;
 
-    public :
-        Edge(Node& node1_, Node& node2_, int label_);
+            std::string type;
 
-        Edge(std::vector<Node> nodeList_, int label_);
+        public :
+            Edge(Node& node1_, Node& node2_, int label_);
 
-        void intAret(std::vector<std::vector<double> >& elemMatrix, std::vector<double>& fElem, std::vector<Node> coordAret);
+            Edge(std::vector<Node> nodeList_, int label_);
 
-        // bool isOnEdge(const std::vector<Edge>& edgeList);
-        
-        // bool operator==(const Edge& other) const;
+            void intAret(std::vector<std::vector<double> >& elemMatrix, std::vector<double>& fElem, std::vector<Node> coordAret);
 
-        void setLabel(int newlabel);
+            // bool isOnEdge(const std::vector<Edge>& edgeList);
+            
+            // bool operator==(const Edge& other) const;
 
-        int getLabel();
+            void setLabel(int newlabel);
 
-        // Node& getNode1() {return node1;}
-        // Node& getNode2() {return node2;}
+            int getLabel() const;
 
-        Node& getNodeAt(int position) {return nodeList[position];}
+            // Node& getNode1() {return node1;}
+            // Node& getNode2() {return node2;}
 
-        int getNodeNumber();
+            Node& getNodeAt(int position) {return nodeList[position];}
 
-        const std::vector<int>& getNodeIDs() const;
+            int getNodeNumber();
 
-        std::vector<Node> getNodeList();
+            const std::vector<int>& getNodeIDs() const;
 
-        void printEdge();
-};
+            std::vector<Node> getNodeList();
+
+            void printEdge();
+    };
 
 #endif

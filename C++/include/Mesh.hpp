@@ -9,6 +9,7 @@
  * 
  * Copyright (C) 2024 by Matthieu PETIT
 \*---------------------------------------------------------------------------*/
+
 #ifndef MESH_C
 #define MESH_C
 
@@ -24,56 +25,57 @@
 #include "Element.hpp"
 
 
-// using MatrixD = std::vector<std::vector<double> >;
-// using VectorD = std::vector<double> ;
-// using VectorI = std::vector<double> ;
-// using VectorNo = std::vector<Node> ;
-// using VectorEd = std::vector<Edge> ;
-// using VectorEl = std::vector<Element> ;
 
-class Mesh {
+    // using MatrixD = std::vector<std::vector<double> >;
+    // using VectorD = std::vector<double> ;
+    // using VectorI = std::vector<double> ;
+    // using VectorNo = std::vector<Node> ;
+    // using VectorEd = std::vector<Edge> ;
+    // using VectorEl = std::vector<Element> ;
 
-    private : 
-        std::string fileName;
-        std::vector<Node> nodes;
-        std::vector<Edge> edges;
-        std::vector<Element> elements;
-        int dimension;
-        
-        int nodesNumber;
-        int edgeNumber;
-        int elementNumber;
-    public :
-        Mesh();
+    class Mesh {
 
-        bool loadMeshObj(const std::string& fileName);
+        private : 
+            std::string fileName;
+            std::vector<Node> nodes;
+            std::vector<Edge> edges;
+            std::vector<Element> elements;
+            int dimension;
+            
+            int nodesNumber;
+            int edgeNumber;
+            int elementNumber;
+        public :
+            Mesh();
 
-        bool loadMsh(const std::string& fileName);
-        bool loadMeshGmsh(const std::string& fileName);
-        bool loadMeshGmsh2(const std::string& fileName);
+            bool loadMeshObj(const std::string& fileName);
 
-        void printMesh() const;
+            bool loadMsh(const std::string& fileName);
+            bool loadMeshGmsh(const std::string& fileName);
+            bool loadMeshGmsh2(const std::string& fileName);
 
-        void integrate();
+            void printMesh() const;
 
-        Node& getNodeAt(int position);
+            void integrate();
 
-        const std::vector<Node>& getNodes() const;
-        const std::vector<Element>& getElements() const;
-        const std::vector<Edge>& getEdges() const;
-        // std::vector<Node> getNodes();
+            Node& getNodeAt(int position);
 
-        Edge& getEdgeAt(int position);
-        int getDimension();
-        int getNodesNumber();
-        int getTrianglesNumber();
-        int getEdgesNumber();
+            const std::vector<Node>& getNodes() const;
+            const std::vector<Element>& getElements() const;
+            const std::vector<Edge>& getEdges() const;
+            // std::vector<Node> getNodes();
+
+            Edge& getEdgeAt(int position){return edges.at(position);}
+            int getDimension(){ return dimension;}
+            int getNodesNumber(){ return nodes.size();}
+            int getTrianglesNumber(){ return elementNumber;}
+            int getEdgesNumber(){ return edgeNumber;}
 
 
-        std::unordered_set<int> getBoundaryNodes() const;
+            std::unordered_set<int> getBoundaryNodes() const;
 
-        void printEdges();
+            void printEdges();
 
-};
+    };
 
 #endif

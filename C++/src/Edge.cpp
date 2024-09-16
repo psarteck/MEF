@@ -35,7 +35,6 @@ Edge::Edge(std::vector<Node> nodeList_, int label_) : nodeList(nodeList_), label
 void Edge::intAret(std::vector<std::vector<double> >& elemMatrix, std::vector<double>& fElem, std::vector<Node> coordAret){
 
     // TO DO : MOVE IN Edge class ??
-    cout << "azeazea" << endl;
     int d = 1;
     
     int q = FEMIntegrale::returnQ(type);
@@ -96,7 +95,7 @@ void Edge::setLabel(int newlabel){
     label = newlabel;
 }
 
-int Edge::getLabel(){
+int Edge::getLabel() const{
     return label;
 }
 

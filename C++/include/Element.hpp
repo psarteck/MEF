@@ -22,66 +22,83 @@
 #include "Quadrature.hpp"
 #include "FEMUtilities.hpp"
 #include "FEMIntegrale.hpp"
+// #include "Types.hpp"
+
+    class Edge;
+
+    class Element {
+
+        // using MatrixD = std::vector<std::vector<double> >;
+        // using VectorD = std::vector<double>;
+        // using VectorI = std::vector<int>;
+        // using VectorNo = std::vector<Node>;
+        // using VectorEd = std::vector<Edge>;
+
+        private : 
+            const int id;   
+            const int number; // Number of the element in the mesh
+            const std::vector<int> nodeIds;
+            std::vector<Edge> edges;
+            std::vector<Node> nodes;
+            std::vector<double> valBase;
+            std::vector<std::vector<double> > valDerBase;
+            // MatrixD elemMatrix;
+            // std::vector<double> fElem;
+
+            Quadrature quadraMethodS1;
+            // Quadrature quadraMethodT1;
+            // Quadrature quadraMethodQ1;
 
 
+            std::vector<int> NuDElem;
+            std::vector<double> uDElem;
+
+            int nodeNb;
+            std::string type;
+            int label;
+            int dimension;
+
+        public :
+            // Element(int id_, const std::vector<int>& nodeIds_);
+
+            Element(int id_, std::vector<int>& nodeIds, std::vector<Node> & nodes_, int number = 0);
+
+            Element(int id_, std::vector<int>& nodeIds, std::vector<Node> & nodes_, std::vector<Edge> & edges_);
+
+            
+            void intElem(std::vector<std::vector<double> >& elemMatrix, std::vector<double>& fElem);
 
 
-class Element {
-
-    using MatrixD = std::vector<std::vector<double> >;
-    using VectorD = std::vector<double>;
-    using VectorI = std::vector<int>;
-    using VectorNo = std::vector<Node>;
-    using VectorEd = std::vector<Edge>;
-
-    private : 
-        const int id;   
-        const std::vector<int> nodeIds;
-        std::vector<Edge> edges;
-        std::vector<Node> nodes;
-        std::vector<double> valBase;
-        MatrixD valDerBase;
-        // MatrixD elemMatrix;
-        // std::vector<double> fElem;
-
-        Quadrature quadraMethodS1;
-        // Quadrature quadraMethodT1;
-        // Quadrature quadraMethodQ1;
-
-        int nodeNb;
-        std::string type;
-        int label;
-        int dimension;
-    public :
-        // Element(int id_, const std::vector<int>& nodeIds_);
-
-        Element(int id_, std::vector<int>& nodeIds, std::vector<Node> & nodes_);
-
-        Element(int id_, std::vector<int>& nodeIds, std::vector<Node> & nodes_, std::vector<Edge> & edges_);
-
-        
-        void intElem(std::vector<std::vector<double> >& elemMatrix, std::vector<double>& fElem);
-
-        void impCalEl(int K, int typEl, int nbneel, std::vector<std::vector<double> > MatElem, std::vector<double> SMbrElem,
-              std::vector<int> NuDElem, std::vector<double> uDElem);
-
-/*
-        GETTERS AND SETTERS
-*/
-        
-        const int getId() const;
-        const std::vector<Edge>& getEdges()const ;
-
-        const std::vector<Node>& getNodes()const ;
-
-        const std::vector<int>& getNodeIDs() const;
-
-        Node getNodeById(int nodeId) const;
-
-        int getNodeNumber();
+            void cal1Elem(std::vector<double>& fElem, std::vector<std::vector<double>>& elemMatrix);
 
 
-};
+            void impCalEl(int K, int typEl, int nbneel, std::vector<std::vector<double> > MatElem, std::vector<double> SMbrElem,
+                std::vector<int> NuDElem, std::vector<double> uDElem);
+
+            
+
+    /*
+            GETTERS AND SETTERS
+    */
+            
+            const int getId() const;
+            const std::vector<Edge>& getEdges()const ;
+
+            const std::vector<Node>& getNodes()const ;
+
+            const std::vector<int>& getNodeIDs() const;
+
+            Node getNodeById(int nodeId) const;
+
+            int getNodeNumber();
+
+            int getNuDElem(int i);
+            double getuDElem(int i);
+            void setNuDElem(int i, int val);
+            void setuDElem(int i, double val);
+
+
+    };
 
 #endif
 

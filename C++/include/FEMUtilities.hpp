@@ -11,6 +11,7 @@
 \*---------------------------------------------------------------------------*/
 #include "Eigen"
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -25,6 +26,11 @@ namespace FEMUtilities {
 
     template <typename T>
     void printVec(std::vector<T> vec, std::string name);
+
+
+    void saveResults(Eigen::VectorXd vec, std::string filename);
+
+    void saveResults(std::vector<double> vec, std::string filename);
 
     // std::vector<double> node2double(std::vector<Node> vec);
 

@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -7,6 +8,8 @@
 #include "Mesh.hpp"
 #include "Node.hpp"
 #include "FEMParameters.hpp"
+#include "Solver.hpp"
+#include "Mesh.hpp"
 #include "Solver.hpp"
 
 using namespace std;
@@ -67,16 +70,16 @@ int main(){
     // bool meshOk = mesh.loadMeshGmsh(parameters.getMeshName());
     bool meshOk = mesh.loadMsh(parameters.getMeshName());
     if(!meshOk){
-        cout << "Problem in the mesh " << endl;
+        cout << "Problem reading the mesh " << endl;
     }
-    
+    // mesh.printMesh();
     Solver solver(mesh, parameters);
     solver.assemble();
 
     // solver.printB();
 
-    FEMUtilities::printMat<double>(solver.getA2(), "A2");
-    FEMUtilities::printVec<double>(solver.getb(), "b");
+    // FEMUtilities::printMat<double>(solver.getA2(), "A2");
+    // FEMUtilities::printVec<double>(solver.getb(), "b");
 
     Eigen::MatrixXd lower = FEMUtilities::mat2Eigen(solver.getA2());
     Eigen::VectorXd b = FEMUtilities::vec2Eigen(solver.getb());
@@ -87,9 +90,14 @@ int main(){
 
     Eigen::VectorXd x = A.fullPivLu().solve(b);    
 
-    std::cout << "Solution x : \n" << x << std::endl;
+    // std::cout << "Solution x : \n" << x << std::endl;
+
+
+    FEMUtilities::saveResults(x, "results/simu1.txt");
 
     // solver.AFFSMD();
+
+
 
     return 0;
 }

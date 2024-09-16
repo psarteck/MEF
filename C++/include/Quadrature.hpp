@@ -17,29 +17,30 @@
 
 // #include "FEMParameters.hpp"
 
-class Quadrature{
-private:
-    std::string methodName;
-    std::string elementType;
-    int order;
 
-    // FEMParameters parameters;
+    class Quadrature{
+    private:
+        std::string methodName;
+        std::string elementType;
+        int order;
 
-    std::vector<double> weights;
-    std::vector<Node> points;
-public:
-    Quadrature(std::string methodName_, std::string elementType_, int order_);
-    // Quadrature(FEMParameters parameters);
-    Quadrature(){};
+        // FEMParameters parameters;
+
+        std::vector<double> weights;
+        std::vector<Node> points;
+    public:
+        Quadrature(std::string methodName_, std::string elementType_, int order_);
+        // Quadrature(FEMParameters parameters);
+        Quadrature(){};
 
 
 
-    void weightsPoints(std::string elementType);
+        void weightsPoints(std::string elementType);
 
-    std::vector<double> getWeights();
-    std::vector<Node> getPoints();
+        std::vector<double> getWeights();
+        std::vector<Node> getPoints();
 
-};
+    };
 
 
 

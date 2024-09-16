@@ -10,6 +10,7 @@
  * Copyright (C) 2024 by Matthieu PETIT
 \*---------------------------------------------------------------------------*/
 #include "FEMProblem.hpp"
+#include <cmath>
 
 namespace FEMProblem {
     /*
@@ -34,7 +35,7 @@ double A11(std::vector<double> x){
 }
 
 double A00(std::vector<double> x){
-    return 1;
+    return 0;
 }
 
 double A12(std::vector<double> x){
@@ -46,7 +47,7 @@ double A22(std::vector<double> x){
 }
 
 double BN(std::vector<double> x){
-    return 1;
+    return 0;
 }
 
 double FOMEGA(std::vector<double> x){
@@ -65,7 +66,9 @@ double FOMEGA(std::vector<double> x){
     //         return 0;
     //         break;
     // }
-    return 1.;
+    // return 32*(x[0]*(1-x[0])+x[1]*(1-x[1]));
+    return 2 * M_PI * M_PI * sin(M_PI * x[0]) * sin(M_PI * x[1]);
+    // return (1+2*M_PI*M_PI)*cos(M_PI*x[0])*cos(M_PI*x[1]);
 }
 
 double FN(std::vector<double> x, int numAret){
@@ -156,7 +159,7 @@ double FN(std::vector<double> x, int numAret){
     //     printf("\nMauvaise valeur du domaine !\n");
     //     return 0;
     // }
-    return 1.;
+    return 0.;
 }
 
 double UD(std::vector<double> x){
@@ -176,7 +179,9 @@ double UD(std::vector<double> x){
     //         return 0;
     //         break;
     //     }
-    return 100*x[0]+x[1];
+    // return 0;
+    // return 100*x[0] + x[1];
+    return 0.0;
 }
 
 }

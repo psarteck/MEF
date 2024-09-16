@@ -16,58 +16,80 @@
 #include <vector>
 #include "Mesh.hpp"
 #include "FEMParameters.hpp"
-
-class Solver {
-
-    private : 
-        std::vector<double> A;
-        std::vector<double> b;
-
-        std::vector<std::vector<double> > A2;
-        std::vector<double> b2;
+#include "Types.hpp"
+#include "System.hpp"
 
 
-        std::vector<int> AdPrCoefLi;
-        std::vector<double> SecMember;
-        std::vector<double> NumDLDir;
-        std::vector<double> ValDLDir;
+    class Solver {
 
-        std::vector<int> AdSuccLi;
-        std::vector<int> NumCol;
-        int NextAd;
+        private : 
 
-        int ptsNb; 
-        int NbLine;
-        int NbCoeff;
+            std::unique_ptr<System> system;
 
-        Mesh mesh;
-        const std::vector<Element>& elementList;
-        const std::vector<Edge>& edgeList;
-        FEMParameters parameters;
-        
-    public : 
-        Solver(Mesh& mesh_, FEMParameters parameters_);
+            std::vector<double> A;
+            std::vector<double> b;
 
-        void assemble();
+            std::vector<std::vector<double> > A2;
+            std::vector<double> b2;
 
-        bool isNeumannEdge(const int labelEdge);
-        
-        bool isDir0Edge(const int labelEdge);
-        
-        bool isDirNHEdge(const int labelEdge);
+            std::vector<double> SecMember;
+
+            std::vector<int> AdPrCoefLi;
+            std::vector<int> NumDLDir;
+            std::vector<int> AdSuccLi;
+            std::vector<int> NumCol;
+
+            std::vector<double> ValDLDir;
+            int NextAd;
+
+            int ptsNb; 
+            int NbLine;
+            int NbCoeff;
+
+            Mesh mesh;
+            const std::vector<Element>& elementList;
+            const std::vector<Edge>& edgeList;
+            FEMParameters parameters;
+            
+        public : 
+            Solver(Mesh& mesh_, FEMParameters parameters_);
+
+            void assemble();
+
+            bool isNeumannEdge(const int labelEdge);
+            
+            bool isDir0Edge(const int labelEdge);
+            
+            bool isDirNHEdge(const int labelEdge);
 
 
 
-        void assmat(int I, int J, double X, std::vector<int>& AdPrCoefLi, std::vector<int>& NumCol,
-            std::vector<int>& AdSuccLi, double * Matrice, int& NextAd);
+            void assmat(int I, int J, double X, std::vector<int>& AdPrCoefLi, std::vector<int>& NumCol,
+                std::vector<int>& AdSuccLi, double * Matrice, int& NextAd);
 
-        void AFFSMD();
+            void AFFSMD();
 
-        void printB();
-        void printA();
+            void printB();
+            void printA();
 
-        std::vector<std::vector<double> >& getA2(){return A2;}
-        std::vector<double>&  getb(){return b;}
-};
+            std::vector<std::vector<double> >& getA2(){return A2;}
+            std::vector<double>& getA(){return A;}
+            std::vector<double>&  getb(){return b;}
+
+            std::vector<int>&  getAdPrCoefLi(){return AdPrCoefLi;}
+            std::vector<int>& getNumDLDir(){return NumDLDir;}
+            std::vector<int>& getAdSuccLi(){return AdSuccLi;}
+            std::vector<int>& getNumCol(){return NumCol;}
+            std::vector<double>& getValDLDir(){return ValDLDir;}
+
+
+            int& getNbLign(){return NbLine;}
+            int& getNbCoeff(){return NbCoeff;}
+
+
+            // (TODO)
+            int* vectorToArray(const std::vector<int>& vec);
+            float* vectorToArray(const std::vector<double>& vec, size_t startIndex);
+    };
 
 #endif
