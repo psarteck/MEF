@@ -18,10 +18,11 @@ X, Y = np.meshgrid(x, y)
 print(U)
 
 uex = np.cos(np.pi * X) * np.cos(np.pi * Y)
+# uex = np.sin(np.pi * X) * np.sin(np.pi * Y)
 errorAbs = np.linalg.norm(U - uex)
 absUex = np.linalg.norm(uex)
 relativeError = errorAbs / absUex
-txtRelErr = str(np.round(relativeError, 5))
+txtRelErr = np.round(relativeError, 5) * 100
 
 print("Relative Error : ", txtRelErr)
 
@@ -33,6 +34,6 @@ fig.colorbar(surf)
 ax.view_init(45, 0)
 plt.xlabel('X', fontsize=22)
 plt.ylabel('Y', fontsize=22)
-plt.title('Solution pour le Domaine, err =  '+txtRelErr, fontsize=20)
+plt.title('Solution pour le Domaine, err =  '+str(txtRelErr)+'%', fontsize=20)
 ax.view_init(90, 0)
 plt.show()

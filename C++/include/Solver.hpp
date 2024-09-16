@@ -64,8 +64,11 @@
 
 
 
-            void assmat(int I, int J, double X, std::vector<int>& AdPrCoefLi, std::vector<int>& NumCol,
-                std::vector<int>& AdSuccLi, double * Matrice, int& NextAd);
+            // void assmat(int I, int J, double X, std::vector<int>& AdPrCoefLi, std::vector<int>& NumCol,
+            //     std::vector<int>& AdSuccLi, std::vector<double>& Matrice, int& NextAd);
+
+            void assmat(int I, int J, double X, std::vector<int>& ADPRCL, std::vector<int>& NUMCOL, 
+            std::vector<int>& ADSUCL, std::vector<double>& LMATRI, int& nbLign, int& NEXTAD);
 
             void AFFSMD();
 

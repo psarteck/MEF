@@ -18,6 +18,7 @@
 #include "forfun.h"
 
 
+#define FORTRAN 0
 
 float* Solver::vectorToArray(const std::vector<double>& vec, size_t startIndex) {
     // Allouer un tableau dynamique de la même taille que le vecteur
@@ -109,21 +110,24 @@ void Solver::assemble(){
 
                 float value = MatElem[i][j];
 
-                std::vector<double> Arest(A.begin() + NbLine, A.end());
-
                 if(I > J){
+#if FORTRAN == 1
                     assmat_(&I,&J,&value, tabAdPrCoefLi, tabNumCol, tabAdSuccLi, tabA, &NextAd);
-                    // assmat(I,J,value, AdPrCoefLi, NumCol, AdSuccLi, tabA, NextAd);
+#else 
+                    assmat(I,J,value, AdPrCoefLi, NumCol, AdSuccLi, A,  NbLine, NextAd);
+#endif
                 }
                 else if(I < J){
+#if FORTRAN == 1
                     assmat_(&J,&I,&value, tabAdPrCoefLi, tabNumCol, tabAdSuccLi, tabA, &NextAd);
-                    // assmat(J,I,value, AdPrCoefLi, NumCol, AdSuccLi, tabA, NextAd);
+#else
+                    assmat(J,I,value, AdPrCoefLi, NumCol, AdSuccLi, A,  NbLine, NextAd);
+#endif
                 }
                 else {
                     A[I-1] += MatElem[i][j];
                 }
-                // std::copy(Arest.begin(), Arest.end(), A.begin() + NbLine);
-
+#if FORTRAN == 1
                 for(int i =  NbLine ; i < A.size(); i++){
                     A[i] = tabA[i-NbLine];
                 }
@@ -136,7 +140,7 @@ void Solver::assemble(){
                 for(int i =  0 ; i < AdSuccLi.size(); i++){
                     AdSuccLi[i] = tabAdSuccLi[i];
                 }
-                
+#endif
             }
 
 
@@ -187,17 +191,25 @@ void Solver::assemble(){
                     float* tabA = vectorToArray(A, NbLine);
 
                     float value = matAret[i][j];
-
+                    
                     if(I > J){
+#if FORTRAN == 1
                         assmat_(&I,&J,&value, tabAdPrCoefLi, tabNumCol, tabAdSuccLi, tabA, &NextAd);
+#else
+                        assmat(I,J,value, AdPrCoefLi, NumCol, AdSuccLi, A, NbLine, NextAd);
+#endif
                     }
                     else if(I < J){
+#if FORTRAN == 1
                         assmat_(&J,&I,&value, tabAdPrCoefLi, tabNumCol, tabAdSuccLi, tabA, &NextAd);
+#else
+                        assmat(J,I,value, AdPrCoefLi, NumCol, AdSuccLi, A, NbLine, NextAd);
+#endif
                     }
                     else {
                         A[I-1] += matAret[i][j];
                     }
-
+#if FORTRAN == 1
                     for(int i =  NbLine ; i < A.size(); i++){
                         A[i] = tabA[i-NbLine];
                     }
@@ -210,6 +222,7 @@ void Solver::assemble(){
                     for(int i =  0 ; i < AdSuccLi.size(); i++){
                         AdSuccLi[i] = tabAdSuccLi[i];
                     }
+#endif
                 }
             }
 
@@ -250,45 +263,85 @@ bool Solver::isDirNHEdge(const int labelEdge){
 }
 
 
+void Solver::assmat(int I, int J, double X, std::vector<int>& ADPRCL, std::vector<int>& NUMCOL, 
+            std::vector<int>& ADSUCL, std::vector<double>& LMATRI, int& nbLign, int& NEXTAD) {
 
-void Solver::assmat(int I, int J, double X, std::vector<int>& AdPrCoefLi, std::vector<int>& NumCol,
-            std::vector<int>& AdSuccLi, float* Matrice, int& NextAd) {
-    int IAD = AdPrCoefLi[I - 1];
+    
+    int IAD, NXT;
 
     if (I <= J) {
-        std::cout << "*Bug* The assmat function n'est utilisée que pour l'assemblage de la partie triangulaire stricte. Vous êtes sur le coefficient (" << I << "," << J << ")." << std::endl;
-        exit(EXIT_FAILURE);
+        std::cerr << "*Bug* La procedure AssMat n'est utilisee que pour l'assemblage de la partie triangulaire stricte. Vous etes sur le coefficient (" << I << "," << J << ")." << std::endl;
+        return;
     }
 
+    IAD = ADPRCL[I - 2];
     if (IAD > 0) {
-        // La ligne I a déjà été rencontrée : recherche de la colonne J
-        while (NumCol[IAD - 1] != J) {
-            // Parcours des éléments de la ligne I
-            int NXT = AdSuccLi[IAD - 1];
-            if (NXT <= 0)
+        while (NUMCOL[IAD - 1] != J) {
+            NXT = ADSUCL[IAD - 1];
+            if (NXT <= 0) {
                 break;
+            }
             IAD = NXT;
         }
 
-        // L'élément A(i,j) existe : on l'incrémente et on sort
-        // Matrice[IAD -1] += X;
-        *(Matrice + IAD - 1) += X;
-        return;
+        if (NUMCOL[IAD - 1] == J) {
+            LMATRI[IAD - 1 + nbLign] += X;
+            return;
+        }
+
+        ADSUCL[IAD - 1] = NEXTAD;
     } else {
-        // Création de la ligne I
-        AdPrCoefLi[I - 1] = NextAd;
+        ADPRCL[I - 2] = NEXTAD;
     }
 
-    // Création de la colonne J
-    AdSuccLi[IAD - 1] = NextAd;
-
-    // Création du coefficient A(i,j) (nouvelle ligne ou colonne)
-    NumCol[NextAd - 1] = J;
-    *(Matrice + NextAd - 1) = X;
-    // Matrice[NextAd - 1] = X;
-    AdSuccLi[NextAd - 1] = 0;
-    NextAd++;
+    NUMCOL[NEXTAD - 1] = J;
+    LMATRI[NEXTAD - 1 + nbLign] = X;
+    ADSUCL[NEXTAD - 1] = 0;
+    NEXTAD += 1;
 }
+
+
+// void Solver::assmat(int I, int J, double X, std::vector<int>& AdPrCoefLi, std::vector<int>& NumCol,
+//             std::vector<int>& AdSuccLi, std::vector<double>& Matrice, int& NextAd) {
+
+//     if (I <= J) {
+//         // (TODO)
+//         std::cout << "*Bug* The assmat function n'est utilisée que pour l'assemblage de la partie triangulaire stricte. Vous êtes sur le coefficient (" << I << "," << J << ")." << std::endl;
+//         exit(EXIT_FAILURE);
+//     }
+//     int IAD = AdPrCoefLi[I - 2];
+//     // cout << "IAD : " << IAD << endl;
+//     if (IAD > 0) {
+//         // La ligne I a déjà été rencontrée : recherche de la colonne J
+//         while (NumCol[IAD - 1] != J) {
+//             // Parcours des éléments de la ligne I
+//             int NXT = AdSuccLi[IAD];
+//             cout << "NXT " << NXT << endl;
+//             if (NXT <= 0)
+//                 break;
+//             IAD = NXT;
+            
+//         }
+
+//         // L'élément A(i,j) existe : on l'incrémente et on sort
+//         Matrice[IAD -1] += X;
+//         // *(Matrice + IAD - 1) += X;
+//         return;
+//     } else {
+//         // Création de la ligne I
+//         AdPrCoefLi[I - 1] = NextAd;
+//     }
+
+//     // Création de la colonne J
+//     AdSuccLi[IAD] = NextAd;
+
+//     // Création du coefficient A(i,j) (nouvelle ligne ou colonne)
+//     NumCol[NextAd - 1] = J;
+//     // *(Matrice + NextAd - 1) = X;
+//     Matrice[NextAd - 1] = X;
+//     AdSuccLi[NextAd - 1] = 0;
+//     NextAd++;
+// }
 
 
 void Solver::printB(){
